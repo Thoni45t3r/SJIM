@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="c10i_account_financial_report_pdf" model="ir.actions.report.xml">
+            <field name="string">LAPORAN KEUANGAN</field>
+            <field name="auto">True</field>
+            <field name="model">wzd.account.financial.report</field>
+            <field name="jasper_model_id" ref="account.model_account_move_line"/>
+            <field name="name">LAPORAN KEUANGAN</field>
+            <field name="report_name">c10i_account_financial_report</field>
+            <field name="rml">sjai_account_finance_report/report/account_fin_report.jrxml</field>
+            <field name="report_rml">sjai_account_finance_report/report/account_fin_report.jrxml</field>
+            <field name="menu">True</field>
+            <field name="report_type">pdf</field>
+            <field name="header">False</field>
+            <field name="jasper_report">True</field>
+            <field name="jasper_output">pdf</field>
+        </record>
+
+    </data>
+</odoo>

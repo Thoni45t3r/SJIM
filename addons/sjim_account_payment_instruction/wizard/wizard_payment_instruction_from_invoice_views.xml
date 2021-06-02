@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="payment_instruction_from_invoice_form">
+        <field name="name">wizard.payment.instruction.from.invoice.form</field>
+        <field name="model">wizard.payment.instruction.from.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Add Invoice">
+                <group>
+                    <group>
+                        <field name="instruction_id" invisible="1"/>
+                        <field name="partner_id" string="Select Vendor" />
+                    </group>
+                    <group>
+                        <field name="selected_invoice_ids" widget="many2many_tags" invisible="1"/>
+                        <field name="selected_invoice_advance_ids" widget="many2many_tags" invisible="1"/>
+                    </group>
+                </group>
+                <label string="Select Invoice" />
+                <field name="invoice_ids" domain="[('partner_id','=',partner_id), ('id','not in',selected_invoice_ids and selected_invoice_ids[0][2] or []),('state','=','open')]"/>
+                <label string="Select Advance" />
+                <field name="invoice_advance_ids" domain="[('partner_id','=',partner_id), ('id','not in',selected_invoice_advance_ids and selected_invoice_advance_ids[0][2] or []),('state','=','open')]"/>
+                <footer>
+                    <button name="add_invoice" string="Add Invoice" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_payment_instruction_from_invoice" model="ir.actions.act_window">
+         <field name="name">Add Invoice</field>
+         <field name="res_model">wizard.payment.instruction.from.invoice</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="context">{}</field>
+         <field name="view_id" ref="payment_instruction_from_invoice_form"/>
+         <field name="target">new</field>
+   </record>
+</odoo>

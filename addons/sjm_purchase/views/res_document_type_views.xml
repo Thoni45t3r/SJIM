@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--Document Type -->
+        <record id="sjim_res_document_type_form" model="ir.ui.view">
+            <field name="name">view.res.document.type.form</field>
+            <field name="model">res.document.type</field>
+            <field name="inherit_id" ref="c10i_document_type.view_res_document_type_form" />
+            <field name="arch" type="xml">
+            	<field name="account_id" position="after">
+            		<field name="account_purchase_susut_id" attrs="{'invisible':[('purchase','=',False)]}" />
+            	</field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,92 @@
+
+/**********************************************************************************
+* 
+*    Copyright (C) 2017 MuK IT GmbH
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Affero General Public License as
+*    published by the Free Software Foundation, either version 3 of the
+*    License, or (at your option) any later version.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Affero General Public License for more details.
+*
+*    You should have received a copy of the GNU Affero General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+**********************************************************************************/
+.o_preview_excel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /* Based on Bootstrap Line Tabs by @keenthemes, Licensed under MIT */
+}
+.o_preview_excel .excel-container {
+  display: none;
+  width: 100%;
+  height: 100%;
+  padding: 0 10px 0 10px;
+}
+.o_preview_excel .excel-container .tab-line {
+  width: 100%;
+  height: 100%;
+}
+.o_preview_excel .excel-container .tab-line > .nav-tabs {
+  height: 42px;
+  border: none;
+  margin: 0px;
+}
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li {
+  margin-right: 2px;
+}
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li > a {
+  border: 0;
+  margin-right: 0;
+  color: #777;
+}
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li > a > span {
+  padding-left: 5px;
+}
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li > a > i {
+  font-size: 15px;
+}
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li.open,
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li:hover {
+  border-bottom: 4px solid #77acd9;
+}
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li.open > a,
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li:hover > a {
+  border: 0;
+  color: #AEA79F;
+  background: none ! important;
+}
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li.open .dropdown-menu,
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li:hover .dropdown-menu {
+  margin-top: 0px;
+}
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li.active {
+  position: relative;
+  border-bottom: 4px solid #337AB7;
+}
+.o_preview_excel .excel-container .tab-line > .nav-tabs > li.active > a {
+  border: 0;
+  color: #666;
+}
+.o_preview_excel .excel-container .tab-line > .tab-content {
+  position: absolute;
+  top: 45px;
+  border: 0;
+  border-top: 1px solid #eee;
+  margin-top: -3px;
+  padding: 3px 0 0 0;
+  height: calc(100% - 45px);
+  width: calc(100% - 20px);
+}
+.o_preview_excel .excel-container .table-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}

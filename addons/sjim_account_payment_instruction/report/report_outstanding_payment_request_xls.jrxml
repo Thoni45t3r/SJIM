@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report Outstanding Request Payment Non Comodity" pageWidth="1200" pageHeight="595" orientation="Landscape" columnWidth="1200" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="8dcde0dc-a5d2-40be-b8a3-3811610b81e2">
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<parameter name="to_date" class="java.lang.String">
+		<parameterDescription><![CDATA[to_date]]></parameterDescription>
+		<defaultValueExpression><![CDATA["2019-12-23"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT api.name AS payment_name
+, api.payment_date AS payment_date
+, api.state AS state
+, rp.name AS partner_name
+, apil.name AS description
+, apil.amount AS amount
+, curr.name AS currency_name
+, api.company_id AS company_id
+, rc.name AS company_name
+, ai.origin AS origin_document
+, COALESCE(po.name, po_advance.name, ai.number) AS detail_name
+, COALESCE(po.date_order, po_advance.date_order, ai.date_invoice)::DATE AS detail_date
+, apr.date_due AS date_due
+FROM account_payment_instruction_line apil
+INNER JOIN account_payment_instruction api ON api.id = apil.instruction_id
+LEFT OUTER JOIN account_payment_request apr ON apr.id = apil.request_id
+LEFT OUTER JOIN account_invoice ai ON ai.id = apr.invoice_id
+LEFT OUTER JOIN purchase_order po ON po.id = ai.purchase_id
+LEFT OUTER JOIN account_invoice_advance aid ON aid.id = apr.invoice_advance_id
+LEFT OUTER JOIN purchase_order po_advance ON po_advance.id = aid.purchase_id
+LEFT OUTER JOIN purchase_order_line po_advance_line ON po_advance_line.order_id = po_advance.id
+LEFT OUTER JOIN res_partner rp ON rp.id = apr.partner_id
+LEFT OUTER JOIN res_currency curr ON curr.id = apr.currency_id
+LEFT OUTER JOIN res_company rc ON rc.id = api.company_id
+LEFT OUTER JOIN product_product pp ON pp.id in (SELECT product_id from account_invoice_line where invoice_id = ai.id LIMIT 1) OR pp.id in (po_advance_line.product_id)
+LEFT OUTER JOIN product_template pt ON pt.id = pp.product_tmpl_id
+WHERE api.payment_date <= $P{to_date}::date 
+AND api.state = 'draft' 
+AND (pt.comodity = False or pt.comodity is Null)]]>
+	</queryString>
+	<field name="payment_name" class="java.lang.String"/>
+	<field name="payment_date" class="java.sql.Date"/>
+	<field name="state" class="java.lang.String"/>
+	<field name="partner_name" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="currency_name" class="java.lang.String"/>
+	<field name="company_id" class="java.lang.Integer"/>
+	<field name="company_name" class="java.lang.String"/>
+	<field name="origin_document" class="java.lang.String"/>
+	<field name="detail_name" class="java.lang.String"/>
+	<field name="detail_date" class="java.sql.Date"/>
+	<field name="date_due" class="java.sql.Date"/>
+	<group name="Currency">
+		<groupExpression><![CDATA[$F{currency_name}]]></groupExpression>
+		<groupHeader>
+			<band height="31">
+				<staticText>
+					<reportElement x="0" y="16" width="20" height="15" uuid="f021f1f1-6512-4dc0-b043-5e4eb3e9624c"/>
+					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top"/>
+					<text><![CDATA[No]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="20" y="16" width="160" height="15" uuid="c1bfb30d-a2de-4945-93d7-c83f9e04a74b"/>
+					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top"/>
+					<text><![CDATA[No. Tagihan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="460" y="16" width="184" height="15" uuid="bf8fce51-6d61-41b9-b811-faf58677c754"/>
+					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top"/>
+					<text><![CDATA[Rekanan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="644" y="16" width="354" height="15" uuid="9ddae0b8-abfc-4d51-90bb-1b9d2a928bac"/>
+					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top"/>
+					<text><![CDATA[Keterangan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="998" y="16" width="117" height="15" uuid="9886f232-faf2-4ae2-a36f-4d7bdf97ff5d"/>
+					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top"/>
+					<text><![CDATA[Jumlah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1115" y="16" width="85" height="15" uuid="08240b49-208b-4f36-b8de-fc95e458125d"/>
+					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top"/>
+					<text><![CDATA[Jatuh Tempo]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="0" y="0" width="1200" height="16" uuid="060f0385-3177-4447-8d92-8d14ade4d5a1"/>
+					<box topPadding="1" leftPadding="0" bottomPadding="1" rightPadding="0">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{company_name} +" ("+ $F{currency_name} + ")"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="180" y="16" width="280" height="15" uuid="bbc536fc-2285-4681-b265-1234f20285e2"/>
+					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top"/>
+					<text><![CDATA[No. Dan Tanggal]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<title>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="1200" height="18" uuid="f90a758c-e14c-4f94-846e-8fd92206f4e1"/>
+				<box topPadding="1" bottomPadding="1">
+					<bottomPen lineWidth="0.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["LAPORAN TAGIHAN"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="18" width="1200" height="18" uuid="92af3198-9586-4702-92d3-edefbdab0249"/>
+				<box topPadding="1" bottomPadding="1">
+					<bottomPen lineWidth="0.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{company_name}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="36" width="1200" height="18" uuid="8e83d76b-7550-41ed-a0bf-bf6a961f46db"/>
+				<box topPadding="1" bottomPadding="1">
+					<bottomPen lineWidth="0.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd MMMM yyyy", new Locale("ID")).format(new SimpleDateFormat("yyyy-MM-dd").parse($P{to_date}))]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="20" height="16" uuid="8d207a1b-ccf6-4127-854e-3ec62c901417"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Currency_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="0" width="160" height="16" uuid="32345cb9-b084-4aab-a227-6af84f2258ec"/>
+				<box topPadding="1" leftPadding="0" bottomPadding="1" rightPadding="0">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{payment_name} == null ? "-" : $F{payment_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(#,##0)">
+				<reportElement x="998" y="0" width="117" height="16" uuid="4eb41162-e433-4258-a566-9a3e139550c8"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="644" y="0" width="354" height="16" uuid="9816d031-8eb3-4aa2-8d03-2e5d7d53322e"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{description} == null ? "-" : $F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="0" width="184" height="16" uuid="c3014416-4354-4e5f-a0f0-29741ac44a23"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{partner_name}== null ? "-" : $F{partner_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="1115" y="0" width="85" height="16" uuid="e0114025-8cc7-409c-b557-6aeb677c0135"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_due}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="180" y="0" width="280" height="16" uuid="734332ad-ccbb-4942-a663-12efb31a22b5"/>
+				<box topPadding="1" leftPadding="0" bottomPadding="1" rightPadding="0">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{detail_name} == null ? "" : $F{detail_name}+ " ") + ($F{detail_date} == null ? " ": "(" +new SimpleDateFormat("dd-MM-yyyy", new Locale("ID")).format($F{detail_date})+")")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

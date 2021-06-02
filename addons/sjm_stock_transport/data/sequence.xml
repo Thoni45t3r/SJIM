@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<odoo noupdate="1">
+
+        <record id="generate_transport_sequence" model="ir.sequence">
+            <field name="name">Generate Transport Seq</field>
+            <field name="code">generate.transport.sequence</field>
+            <field name="prefix">GTD/%(month_roman)s/%(y)s/</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="transport_acrue_sequence" model="ir.sequence">
+            <field name="name">Transport Accrue Seq</field>
+            <field name="code">transport.accrue.sequence</field>
+            <field name="prefix">AT/%(month_roman)s/%(y)s/</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="transport_invoice_sequence" model="ir.sequence">
+            <field name="name">Transport Invoice Seq</field>
+            <field name="code">transport.invoice.sequence</field>
+            <field name="prefix">IT/%(month_roman)s/%(y)s/</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+</odoo>

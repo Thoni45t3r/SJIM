@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sjm_purchase_order_from_view" model="ir.ui.view">
+            <field name="name">sjm.purchase.order.tree.view</field>
+            <field name="model">purchase.order</field>
+            <field name="priority">19</field>
+            <field name="inherit_id" ref="c10i_purchase.purchase_order_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="attributes">
+                    <attribute name="options">{"always_reload": True, "no_create": True}</attribute>
+                </field>
+                <field name="incoterm_id" position="after">
+                    <field name="quality_ffa" />
+                    <field name="quality_mni" string="KK"/>
+                    <field name="quality_iv" string="KA"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="sjm_purchase_order_tree_view" model="ir.ui.view">
+            <field name="name">sjm.purchase.order.tree.view</field>
+            <field name="model">purchase.order</field>
+            <field name="priority">19</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="date_planned" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="origin" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="name" position="after">
+                    <field name="partner_ref"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- ========== Spesifikasi Report ========== -->
+        <report string	= "Form Purchase General"
+				model	= "purchase.order"
+				auto	= "True"
+				name	= "report_purchase_order_sparepart"
+				rml		= "sjm_purchase/reports/report_nota_purchase_sparepart2.jrxml"
+				id		= "report_purchase_order_sparepart"
+                menu    = "False"
+        />
+        <!-- ========== Spesifikasi Report ========== -->
+        <report string	= "From Purchase Price 3 digit Koma"
+				model	= "purchase.order"
+				auto	= "True"
+				name	= "report_purchase_order_general_tanpa_koma"
+				rml		= "sjm_purchase/reports/report_nota_purchase.jrxml"
+				id		= "report_purchase_order_general_tanpa_koma"
+                menu    = "False"
+        />
+    </data>
+</odoo>

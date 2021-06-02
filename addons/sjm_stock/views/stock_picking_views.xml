@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_view_picking_type_skb_form" model="ir.ui.view">
+            <field name="name">view.stock.picking.type.skb.form</field>
+            <field name="model">stock.picking.type</field>
+            <field name="priority">25</field>
+            <field name="inherit_id" ref="stock.view_picking_type_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="skb"/>
+                    <field name="inter_transfer_send"/>
+                    <field name="inter_transfer_receive"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="sjm_stock_picking_form" model="ir.ui.view">
+            <field name="name">sjm.stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">24</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <button name="do_print_picking" position="replace">
+                    <button name="print_report_picking" string="Print" groups="stock.group_stock_user" type="object" attrs="{'invisible': [('state', 'not in', ('done', 'assigned', 'partially_available'))]}" icon="fa-print"/>
+                </button>
+				<button name="%(stock.action_report_delivery)d" position="replace"/>
+            </field>
+        </record>
+
+        <record id="sjm_stock_picking_skb_form" model="ir.ui.view">
+            <field name="name">sjm.stock.picking.skb.form</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">25</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="picking_type_id" position="replace"/>
+                <field name="location_id" position="before">
+                    <field name="picking_type_id"/>
+                </field>
+                <field name="partner_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="min_date" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="origin" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="min_date" position="before">
+                    <field name="skb" invisible="0"/>
+                </field>
+                <xpath expr="//field[@name='move_lines']" position="replace">
+                    <field name="move_lines" attrs="{'readonly': [('state', 'in', ('cancel', 'partially_available', 'assigned', 'done'))]}" options="{'reload_on_button': True}" mode="tree,kanban" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                        <kanban class="o_kanban_mobile">
+                            <field name="product_id"/>
+                            <field name="availability"/>
+                            <field name="product_uom_qty"/>
+                            <field name="product_uom" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="location_dest_id"/>
+                            <field name="scrapped"/>
+                            <field name="state"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <strong><span><t t-esc="record.product_id.value"/></span></strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-8 text-muted">
+                                                <span><t t-esc="record.availability.value"/> on <t t-esc="record.product_uom_qty.value"/> <t t-esc="record.product_uom.value"/></span>
+                                            </div>
+                                            <div class="col-xs-4 text-muted">
+                                                <span class="pull-right text-right"><t t-esc="record.location_dest_id.value"/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <tree decoration-muted="scrapped == True" string="Stock Moves" editable="bottom">
+                            <field name="product_id" options="{'no_create': True}"/>
+                            <field name="name" invisible="1"/>
+                            <field name="product_uom_qty"/>
+                            <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                            <field name="account_location_type_id" invisible="0" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="account_location_id" invisible="0" domain="[('type_id','=',account_location_type_id)]" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="account_location_type_no_location" invisible="1"/>
+                            <field name="account_account_location_ids" widget="many2many_tags" invisible="1"/>
+                            <field name="account_id" invisible="0" domain="[('user_type_id.name','!=','View'),('id', 'in', account_account_location_ids[0][2])]" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="create_date" invisible="1" />
+                            <field name="date_expected" invisible="1" />
+                            <field name="picking_type_id" invisible="1"/>
+                            <field name="scrapped" invisible="1"/>
+                            <field name="availability" invisible="1"/>
+                            <field name="reserved_availability" invisible="1"/>
+                            <field name="location_dest_id" invisible="1"/>
+                            <field name="remaining_qty" invisible="1"/>
+                            <field name="note" invisible="0"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+        <record id="action_stock_picking_skb" model="ir.actions.act_window">
+            <field name="name">Slip Keluar Barang</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="domain">[('skb','=',True)]</field>
+            <field name="context">{'readonly_by_pass': True,'default_skb': True,'skb' : True}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Klik untuk menambahkan Slip Keluar Barang.
+              </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_stock_picking_skb_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="stock.vpicktree"/>
+            <field name="act_window_id" ref="action_stock_picking_skb"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_stock_picking_skb_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sjm_stock_picking_skb_form"/>
+            <field name="act_window_id" ref="action_stock_picking_skb"/>
+        </record>
+        <menuitem id="menu_stock_picking_skb" name="Slip Keluar Barang" action="action_stock_picking_skb" parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager,stock.group_stock_user" sequence="20"/>
+
+        <record id="stock.action_picking_tree_all" model="ir.actions.act_window">
+            <field name="name">Stock Operations</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('skb','!=',True)]</field>
+            <field name="context">{
+                    'contact_display': 'partner_address',
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+
+        <record id="sjm_inter_warehouse_picking_form" model="ir.ui.view">
+            <field name="name">sjm.inter.warehouse.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="c10i_stock_inter_warehouse.inter_warehouse_picking_form" />
+            <field name="arch" type="xml">
+                <field name="backorder_id" position="after">
+                    <field name="receipt_picking_id" options="{'no_create': True}"
+                           domain="[('state','=','done'),('location_dest_id','=',location_id),('location_id.usage','=','supplier')]"
+                            attrs="{'invisible': ['|',('state','!=','draft'),'|',('location_id','=',False),('location_dest_id','=',False)]}"/>
+                </field>
+                <!--<xpath expr="//field[@name='move_lines']/" position="replace">-->
+            </field>
+        </record>
+
+        <!-- ========== Spesifikasi Report ========== -->
+        <report string	= "Report Stock Picking"
+				model	= "stock.picking"
+				auto	= "True"
+				name	= "report_stock_picking"
+				rml		= "sjm_stock/reports/report_stock_picking.jrxml"
+				id		= "report_stock_picking"
+                menu    = "False"
+        />
+		<report string	= "Report GRN"
+				model	= "stock.picking"
+				auto	= "True"
+				name	= "report_grn"
+				rml		= "sjm_stock/reports/report_grn.jrxml"
+				id		= "report_grn"
+                menu    = "False"
+        />
+
+        <record id="sjm_inter_warehouse_picking_form2" model="ir.ui.view">
+            <field name="name">sjm.stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">24</field>
+            <field name="inherit_id" ref="c10i_stock_inter_warehouse.inter_warehouse_picking_form"/>
+            <field name="arch" type="xml">
+                <button name="do_print_picking" position="replace">
+                    <button name="print_report_picking" string="Print" groups="stock.group_stock_user" type="object" attrs="{'invisible': [('state', 'not in', ('done', 'assigned', 'partially_available'))]}" icon="fa-print"/>
+                </button>
+                <xpath expr="//field[@name='move_lines']/tree/field[@name='state']" position="after">
+                    <field name="purchase_line_id2" invisible="0" />
+                </xpath>
+                <field name="picking_type_id" position="attributes">
+                    <attribute name="domain">[('inter_transfer_send','=',True)]</attribute>
+                </field>
+                <field name="dest_picking_type_id" position="attributes">
+                    <attribute name="domain">[('inter_transfer_receive','=',True)]</attribute>
+                </field>
+            </field>
+        </record>
+
+        <!--<record id="sjm_inter_warehouse_picking_form2" model="ir.ui.view">
+            <field name="name">sjm.stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">24</field>
+            <field name="inherit_id" ref="c10i_stock_inter_warehouse.inter_warehouse_picking_form2"/>
+            <field name="arch" type="xml">
+                <button name="do_print_picking" position="replace">
+                    <button name="print_report_picking" string="Print" groups="stock.group_stock_user" type="object" attrs="{'invisible': [('state', 'not in', ('done', 'assigned', 'partially_available'))]}" icon="fa-print"/>
+                </button>
+            </field>
+        </record> -->
+    </data>
+</odoo>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data> 
+
+		<record id="generate_transport_data_tree_view" model="ir.ui.view">
+            <field name="name">generate.transport.data.tree.view</field>
+            <field name="model">generate.transport.data</field>
+            <field name="arch" type="xml">
+                <tree string="Generate Transport Data">
+                	<field name="start_date"/>
+	                <field name="end_date"/>
+	                <field name="transaction_type_id"/>
+	                <field name="contract_id"/>
+	                <field name="partner_id"/>
+	                <field name="delivery_order_id"/>
+	                <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="generate_transport_data_search" model="ir.ui.view">
+            <field name="name">generate.transport.data.search</field>
+            <field name="model">generate.transport.data</field>
+            <field name="arch" type="xml">
+                <search string="Search Data">
+	                <field name="contract_id"/>
+	                <field name="partner_id"/>
+	                <field name="delivery_order_id"/>
+                    <field name="start_date"/>
+	                <field name="transaction_type_id"/>
+                </search>
+            </field>
+        </record>
+
+
+		<record model="ir.ui.view" id="generate_transport_data_form_view">
+		    <field name="name">generate.transport.data.form</field>
+		    <field name="model">generate.transport.data</field>
+		    <field name="arch" type="xml">
+		        <form>
+		        	<header>
+		        		<button name="action_confirm" string="Confirm" states="draft" class="oe_highlight" type="object"/>
+		        		<button name="action_draft" string="Set to Draft" states="confirmed" type="object"/>
+		        		<field name="state" widget="statusbar" readonly="1"/>
+		        	</header>
+		        	<!-- <sheet> -->
+						<div class="oe_title">
+							<h1><field name="name" required="1" readonly="1"/></h1>
+						</div>
+		             	<group>
+		             		<group>
+				             	<field name="start_date" attrs="{'readonly': [('state','!=','draft')], 'required': 1}"/>
+				                <field name="end_date" attrs="{'readonly': [('state','!=','draft')], 'required': 1}"/>
+				                <field name="source_data" attrs="{'readonly': [('state','!=','draft')], 'required': 1}"/>
+	                 		</group>
+	                 		<group>
+				                <field name="product_spk_id" attrs="{'readonly': [('state','!=','draft')], 'required': 1}" options="{'no_create': True}"/>
+	                 		</group>
+			            </group>
+	                 	<group string="Filter Lain">
+	                 		<group>
+	                 			<field name="transaction_type_id" attrs="{'readonly': [('state','!=','draft')], 'invisible': [('source_data', '!=', 'timbangan')]}" options="{'no_edit': True, 'no_create': True}"/>
+	                 			<field name="partner_id" attrs="{'readonly': [('state','!=','draft')]}" options="{'no_edit': True, 'no_create': True}"/>
+	                 			<field name="contract_id" attrs="{'readonly': [('state','!=','draft')]}" options="{'no_edit': True, 'no_create': True}"/>
+	                 			<field name="delivery_order_id" attrs="{'readonly': [('state','!=','draft')], 'invisible': [('source_data', 'not in', ['timbangan','import_timbang'])]}" options="{'no_edit': True, 'no_create': True}"/>
+	                 		</group>
+	                 	</group>
+	                 	<field name="summary_line_ids" readonly="1" attrs="{'invisible': [('summary_line_ids','=',[])]}">
+	                 		<tree>
+	                 			<field name="partner_id"/>
+	                 			<field name="relasi"/>
+	                 			<field name="product_qty" sum="product_qty"/>
+	                 		</tree>
+	                 	</field>
+		        		<button name="generate_transport" string="Generate" class="oe_highlight" type="object" attrs="{'invisible': ['|', ('line_ids', '!=', []), ('state', '!=', 'draft')]}"/>
+		        		<button name="update_line_value" string="Add or Update Lines" class="oe_highlight" type="object" attrs="{'invisible': ['|', ('line_ids', '=', []), ('state', '!=', 'draft')]}"/>
+                        <button name="delete_all_lines" string="⇒ Delete all lines" type="object" class="oe_link oe_right" attrs="{'invisible': ['|', ('line_ids', '=', []), ('state', '!=', 'draft')]}"/>
+                		<field name="line_ids" attrs="{'readonly': [('state','=','confirmed')]}">
+	                		<tree string="Data Lines" colors="red:state=='not_valid'" class="table_header_freeze" editable="bottom">
+				                <field name="generate_proceed_to_move" />
+	                			<field name="date" readonly="1"/>
+				                <field name="partner_id" readonly="1"/>
+	                			<field name="no_plat" readonly="1"/>
+	                			<field name="driver_name" readonly="1"/>
+	                			<field name="src_location_id" readonly="1"/>
+	                			<field name="src_bruto"  readonly="1"/>
+	                			<field name="src_tare"  readonly="1"/>
+	                			<field name="src_netto"  readonly="1"/>
+	                			<field name="dest_location_id" readonly="1"/>
+	                			<field name="dest_bruto"  readonly="1"/>
+	                			<field name="dest_tare"  readonly="1"/>
+				                <field name="product_qty" readonly="1"/>
+				                <field name="difference_qty" readonly="1"/>
+				                <!-- <field name="asal"/> -->
+				                <!-- <field name="tujuan"/> -->
+				                <field name="rate_type" readonly="1"/>
+				                <field name="price_unit" readonly="1"/>
+				                <field name="wb_do" readonly="1"/>
+	                			<field name="contract_id"  readonly="1"/>
+	                			<field name="product_id"  readonly="1"/>
+	                			<field name="relasi"  readonly="1"/>
+				                <field name="state" readonly="1"/>
+
+				                <field name="generate_transport_id" invisible="1"/>
+				                <field name="timbang_metro_id" invisible="1"/>
+				                <field name="timbang_sampit_id" invisible="1"/>
+				                <field name="rekap_timbang_line_id" invisible="1"/>
+				                <field name="import_dharmala_line_id" invisible="1"/>
+	                		</tree>
+	                		<form>
+	                			<group>
+	                				<group>
+			                			<field name="date"/>
+			                			<field name="src_location_id"/>
+			                			<field name="dest_location_id"/>
+						                <field name="asal"/>
+						                <field name="tujuan"/>
+						                <field name="partner_id"/>
+						                <field name="product_id"/>
+						                <field name="product_qty"/>
+						                <field name="rate_type"/>
+						                <field name="price_unit"/>
+						            </group>	                				
+		                			<group>
+						                <field name="wb_do"/>
+						                <field name="state"/>
+						                <field name="generate_transport_id"/>
+						                <field name="timbang_metro_id"/>
+						                <field name="timbang_sampit_id"/>
+						                <field name="rekap_timbang_line_id"/>
+						                <field name="import_dharmala_line_id"/>	                				
+		                			</group>
+	                			</group>
+	                			<field name="error_note"/>
+	                		</form>
+	                	</field>
+		        	<!-- </sheet> -->
+		        </form>
+		    </field>
+		</record> 
+
+		<record model="ir.actions.act_window" id="action_generate_transport_data">
+		    <field name="name">Generate Transport Data</field>
+		    <field name="res_model">generate.transport.data</field>
+		    <field name="view_type">form</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+	
+		<menuitem id="generate_transport_data_menu" name="Generate Transport Data" parent="sjm_stock_transport.menu_stock_transport_cost" action="action_generate_transport_data" sequence="1"/>
+
+	</data>
+</odoo>

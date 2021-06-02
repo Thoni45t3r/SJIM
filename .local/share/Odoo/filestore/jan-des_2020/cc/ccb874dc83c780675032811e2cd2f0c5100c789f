@@ -1,0 +1,18 @@
+
+@font-face {
+  font-family: Roboto;
+  src: url(/backend_theme_v10/static/src/font/Roboto-Regular.ttf);
+}
+.navbar-default .badge {
+  background-color: #fff;
+  color: #337AB7;
+}
+.navbar-inverse .badge {
+  background-color: #fff;
+  color: #337AB7;
+}
+@media (max-width: 767px) {
+  .navbar .dropdown-menu a {
+    color: #fff;
+  }
+}

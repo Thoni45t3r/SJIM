@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laporan_pengiriman_cpko_bungkil_line" language="groovy" pageWidth="721" pageHeight="842" columnWidth="721" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4f24bad1-f41b-43ca-b99c-5ed6c95eadca">
+	<property name="ireport.zoom" value="1.9487171000000025"/>
+	<property name="ireport.x" value="95"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="mla_id" class="java.lang.Integer"/>
+	<parameter name="start_date" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT so.client_order_ref AS pengiriman,
+	so.confirmation_date AS tanggal_kontrak,
+	pu.name AS uom,
+	pt.name AS p_name,
+	mlkl.product_uom_qty AS stock_akhir,
+    (SELECT sum(product_uom_qty) AS qty
+		FROM (SELECT mlk.product_uom_qty
+			FROM mill_lhp_kontrak_line mlk
+			LEFT JOIN sale_order_line soline ON soline.order_id = mlk.order_id
+			WHERE mlk.lab_id = mlkl.lab_id
+				AND soline.product_id = sol.product_id)dummy) AS total_stock_akhir,
+	(SELECT sum(sm.product_qty) AS qty
+		FROM stock_picking sp
+		LEFT JOIN sale_order so ON so.id = mlkl.order_id
+		LEFT JOIN stock_move sm ON sm.picking_id = sp.id
+		WHERE sp.group_id = so.procurement_group_id
+			AND (sp.date_done + INTERVAL '7 hours')::TIMESTAMP < ($P{start_date}||' 00:00:00')::TIMESTAMP
+			AND sp.state='done')  AS pengiriman_b_lalu,
+	(SELECT sum(sm.product_qty) AS qty
+		FROM stock_picking sp
+		LEFT JOIN sale_order so ON so.id = mlkl.order_id
+		LEFT JOIN stock_move sm ON sm.picking_id = sp.id
+		WHERE sp.group_id = so.procurement_group_id
+			AND (sp.date_done + INTERVAL '7 hours')::TIMESTAMP BETWEEN (mla.date||' 00:00:00')::TIMESTAMP AND (mla.date ||'  23:59:59')::TIMESTAMP
+			AND sp.state='done')  AS pengiriman_h_ini,
+	(SELECT sum(sm.product_qty) AS qty
+		FROM stock_picking sp
+		LEFT JOIN sale_order so ON so.id = mlkl.order_id
+		LEFT JOIN stock_move sm ON sm.picking_id = sp.id
+		WHERE sp.group_id = so.procurement_group_id
+			AND (sp.date_done + INTERVAL '7 hours')::TIMESTAMP < (mla.date ||'  23:59:59')::TIMESTAMP
+			AND sp.state='done')  AS pengiriman_sd_h_ini,
+	((SELECT sum(sm.product_qty) AS qty
+		FROM stock_picking sp
+		LEFT JOIN sale_order so ON so.id = mlkl.order_id
+		LEFT JOIN stock_move sm ON sm.picking_id = sp.id
+		WHERE sp.group_id = so.procurement_group_id
+			AND (sp.date_done + INTERVAL '7 hours')::TIMESTAMP < ($P{start_date}||' 00:00:00')::TIMESTAMP
+			AND sp.state='done') +
+	(SELECT sum(sm.product_qty) AS qty
+		FROM stock_picking sp
+		LEFT JOIN sale_order so ON so.id = mlkl.order_id
+		LEFT JOIN stock_move sm ON sm.picking_id = sp.id
+		WHERE sp.group_id = so.procurement_group_id
+			AND (sp.date_done + INTERVAL '7 hours')::TIMESTAMP BETWEEN ($P{start_date}||' 00:00:00')::TIMESTAMP AND (mla.date ||'  23:59:59')::TIMESTAMP
+			AND sp.state='done')) AS pengiriman_sd_b_ini,
+	(mlkl.product_uom_qty - mlkl.qty_delivered) AS sisa_kontrak,
+    ((SELECT sum(product_uom_qty) AS qty
+		FROM (SELECT mlk.product_uom_qty
+			FROM mill_lhp_kontrak_line mlk
+			LEFT JOIN sale_order_line soline ON soline.order_id = mlk.order_id
+			WHERE mlk.lab_id = mlkl.lab_id
+				AND soline.product_id = sol.product_id)dummy) -
+	(SELECT sum(qty_delivered) AS qty
+		FROM (SELECT mlk.qty_delivered
+			FROM mill_lhp_kontrak_line mlk
+			LEFT JOIN sale_order_line soline ON soline.order_id = mlk.order_id
+			WHERE mlk.lab_id = mlkl.lab_id
+				AND soline.product_id = sol.product_id)dummy)) AS total_sisa_kontrak,
+    rp.name AS partner
+FROM mill_lhp_kontrak_line mlkl
+LEFT JOIN mill_laboratory_analysis mla ON mla.id = mlkl.lab_id
+LEFT JOIN res_partner rp ON rp.id = mlkl.partner_id
+LEFT JOIN sale_order so ON so.id = mlkl.order_id
+LEFT JOIN sale_order_line sol ON sol.order_id = so.id
+LEFT JOIN product_product pp ON pp.id = sol.product_id
+LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
+LEFT JOIN product_uom pu ON pu.id = mlkl.unit_of_measure
+WHERE mlkl.lab_id=$P{mla_id}
+ORDER BY so.client_order_ref]]>
+	</queryString>
+	<field name="pengiriman" class="java.lang.String"/>
+	<field name="tanggal_kontrak" class="java.sql.Date"/>
+	<field name="uom" class="java.lang.String"/>
+	<field name="stock_akhir" class="java.lang.Double"/>
+	<field name="total_stock_akhir" class="java.lang.Double"/>
+	<field name="pengiriman_b_lalu" class="java.lang.Double"/>
+	<field name="pengiriman_h_ini" class="java.lang.Double"/>
+	<field name="pengiriman_sd_h_ini" class="java.lang.Double"/>
+	<field name="pengiriman_sd_b_ini" class="java.lang.Double"/>
+	<field name="sisa_kontrak" class="java.lang.Double"/>
+	<field name="total_sisa_kontrak" class="java.lang.Double"/>
+	<field name="partner" class="java.lang.String"/>
+	<field name="p_name" class="java.lang.String"/>
+	<group name="Group Header 1" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{p_name}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField pattern="#,##0;(-#,##0)">
+					<reportElement x="1" y="0" width="720" height="15" uuid="8b31384f-4a51-4f83-aebe-b4532f8dcac8"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="9"/>
+						<paragraph leftIndent="1" rightIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{p_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<staticText>
+					<reportElement x="1" y="0" width="203" height="15" uuid="7d174ab1-0bb7-491d-96a6-6efe6aa1f4ca"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="1"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField pattern="#,##0;(-#,##0)">
+					<reportElement x="204" y="0" width="65" height="15" uuid="288d46e4-d3c0-49a1-8b9f-3807d216a30a"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="1" rightIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_stock_akhir}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;(-#,##0)">
+					<reportElement x="269" y="0" width="65" height="15" uuid="6d431c2c-1d6e-4a2e-a603-570e2aea7cb3"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="1" rightIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" - "]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;(-#,##0)">
+					<reportElement x="334" y="0" width="65" height="15" uuid="b5592ef7-d61e-48cb-842d-e078e2cd591b"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="1" rightIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" - "]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;(-#,##0)">
+					<reportElement x="464" y="0" width="65" height="15" uuid="29055f5f-bbeb-4850-898e-49f64ab0d11e"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="1" rightIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" - "]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;(-#,##0)">
+					<reportElement x="529" y="0" width="65" height="15" uuid="cf5e3818-5c16-459e-a279-69f12bc97672"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="1" rightIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_sisa_kontrak}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="594" y="0" width="127" height="15" uuid="ed235b27-555f-42c2-9975-c7c2baaa7100"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField pattern="#,##0;(-#,##0)">
+					<reportElement x="399" y="0" width="65" height="15" uuid="6b14eb65-ba5a-48f6-94e8-1e85a02350d9"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="1" rightIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" - "]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="0" width="25" height="30" uuid="50bd52ab-11df-4817-b1c1-13453a704e5e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="26" y="0" width="90" height="30" uuid="da79a610-2d07-4fab-9c9c-d41acb7a7fd2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pengiriman]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="116" y="0" width="48" height="30" uuid="c6b16ab9-1dd0-4603-931a-726c203f2c42"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tgl Kontrak]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="164" y="0" width="40" height="30" uuid="ea8c2836-9fc7-4e90-8a5e-358a863e0113"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Satuan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="204" y="0" width="65" height="30" uuid="52ccee21-52db-49a1-b269-9274e21bf355"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stock Akhir (Lt)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="269" y="0" width="65" height="30" uuid="cf2d82ed-99d8-4926-b266-76094e271e49"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bln Lalu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="0" width="130" height="15" uuid="efe542e4-0b6b-496d-986f-df6378d02a7e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pengiriman]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="15" width="65" height="15" uuid="585e92fe-3e7d-450f-880f-b7db51dd0740"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[H. Ini]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="15" width="65" height="15" uuid="05ea0e11-8234-4f57-b5b8-4d61ea720581"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[S/D H. Ini]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="464" y="0" width="65" height="30" uuid="3e17c0e6-1edc-45ee-b33e-8be38725c244"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[S/D Bln Ini]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="529" y="0" width="65" height="30" uuid="ec64d87a-edc8-4bb0-ad2b-29a275a0bc0d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sisa Kontrak]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="594" y="0" width="127" height="30" uuid="b37bd905-a457-44bd-a2e1-75b9ea4d16f1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ket]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="26" y="0" width="90" height="15" uuid="b8edd839-c0df-4231-8d18-614a48c92ba5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pengiriman} == null ? " - " : $F{pengiriman}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="0" width="25" height="15" uuid="38ff7020-549d-4643-bf95-f3d5cfe14ba5"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yy">
+				<reportElement x="116" y="0" width="48" height="15" uuid="788725a0-9302-4d21-a95b-e8581aebacc5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tanggal_kontrak} == null ? "-" : new SimpleDateFormat("dd/MM/yy", new java.util.Locale("id")).format($F{tanggal_kontrak})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="164" y="0" width="40" height="15" uuid="15ab20d2-923b-4c3e-b5af-cc85e306fb53"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uom} == "Ton" ? " kg " : " kg "]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="204" y="0" width="65" height="15" uuid="afe1a14b-e396-43e5-b9a2-fa03b2abfa29"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stock_akhir} == null ? " - " : $F{stock_akhir}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="529" y="0" width="65" height="15" uuid="4071797c-232c-4a19-8574-d108506cc107"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sisa_kontrak} == null ? " - " : $F{sisa_kontrak}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="269" y="0" width="65" height="15" uuid="a4ec5ea9-a609-4e52-b0e8-9f88a69ddcb6"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pengiriman_b_lalu} == null ? " - " : $F{pengiriman_b_lalu}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="334" y="0" width="65" height="15" uuid="63b18dd4-94cc-43e2-8420-8e5687e3c90d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pengiriman_h_ini} == null ? " - " : $F{pengiriman_h_ini}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="464" y="0" width="65" height="15" uuid="352cc024-1320-486a-8e2c-c0916767ff09"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pengiriman_sd_b_ini} == null ? " - " : $F{pengiriman_sd_b_ini}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="594" y="0" width="127" height="15" uuid="4c50ac96-3fac-4a04-babc-4c453782bc00"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{partner} == null ? " - " : $F{partner}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="399" y="0" width="65" height="15" uuid="420becac-4e2d-411b-a5e3-a339140e2f45"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pengiriman_sd_h_ini} == null ? " - " : $F{pengiriman_sd_h_ini}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="15" splitType="Stretch"/>
+	</columnFooter>
+</jasperReport>

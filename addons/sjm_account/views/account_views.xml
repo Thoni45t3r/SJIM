@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_payment_form_view" model="ir.ui.view">
+            <field name="name">view.account.payment.form</field>
+            <field name="model">account.payment</field>
+		    <field name="inherit_id" ref="c10i_account.c10i_view_account_payment_form"/>
+		    <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_adm']" position="after">
+                    <field name="check_number"/>
+                    <field name="check_date"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_voucher_form_view" model="ir.ui.view">
+            <field name="name">view.account.payment.form</field>
+            <field name="model">account.voucher</field>
+		    <field name="inherit_id" ref="c10i_account.view_voucher_form"/>
+		    <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="after">
+                    <field name="check_number"/>
+                    <field name="check_date"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sjm_view_account_invoice_form_inherited" model="ir.ui.view">
+            <field name="name">sjm.view.account.invoice.form.inherited</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="c10i_account.c10i_view_account_invoice_form_inherited" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='print_report_invoice']" position="after">
+                     <button name="print_report_kwitansi" string="Kwitansi" type="object" icon="fa-print" states="open,paid"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sjm_view_account_invoice_form2_inherited" model="ir.ui.view">
+            <field name="name">sjm.view.account.invoice.form.inherited</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group/group[2]/div" position="after">
+                    <field name="currency_name" invisible="1"/>
+                    <field name="kmk_rate" attrs="{'invisible': [('currency_name', '=', 'IDR')]}" />
+                </xpath>
+            </field>
+        </record>
+		
+		<record id="sjm_view_account_invoice_advance_form_inherited" model="ir.ui.view">
+			<field name="name">sjm_view_account_invoice_advance_form_inherited</field>
+			<field name="model">account.invoice.advance</field>
+			<field name="inherit_id" ref="c10i_account_invoice_advance.invoice_advance_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//button[@name='invoice_print']" position="after">
+					<button name="print_report_kwitansi_advance" string="Kwitansi" type="object" icon="fa-print" state="open,paid"/>
+				</xpath>
+			</field>
+		</record>
+
+        <!-- ========== Spesifikasi Report ========== -->
+        <report string	= "Report Nota Kwitansi"
+				model	= "account.invoice"
+				auto	= "True"
+				name	= "report_nota_kwitansi_sjm"
+				rml		= "sjm_account/reports/report_nota_kwitansi.jrxml"
+				id		= "report_nota_kwitansi_sjm"
+                menu    = "True"
+        />
+    </data>
+</odoo>

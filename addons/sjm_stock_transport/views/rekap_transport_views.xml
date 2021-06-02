@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_import_rekap_timbang_form_transport" model="ir.ui.view">
+            <field name="name">import.rekap.timbang.form</field>
+            <field name="model">import.rekap.timbang</field>
+            <field name="inherit_id" ref="sjim_weighbridge.view_import_rekap_timbang_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page[@name='general']/field[@name='line_ids']/tree/field[@name='name']" position="after">
+                    <field name="wb_do" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

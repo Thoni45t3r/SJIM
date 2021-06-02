@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_fin_report_type_tree_view" model="ir.ui.view">
+            <field name="name">Account/Fin Report Type Tree View</field>
+            <field name="model">account.financial.report.type</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_account_fin_report_type" model="ir.actions.act_window">
+            <field name="name">Account/Fin Report Type</field>
+            <field name="res_model">account.financial.report.type</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account_fin_report_type_tree_view"/>
+        </record>
+
+        <menuitem name="Account/Fin Report Type"
+                  id="menu_action_account_fin_report_type"
+                  parent="account.menu_finance_configuration"
+                  groups="base.group_no_one"
+                  action="action_account_fin_report_type" sequence="50"/>
+
+    </data>
+</odoo>

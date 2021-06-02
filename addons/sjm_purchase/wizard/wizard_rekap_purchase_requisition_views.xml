@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+		<record model="ir.ui.view" id="wizard_rekap_purchase_requisition_sjm">
+			<field name="name">wizard.rekap.purchase.requisition.form.sjm</field>
+			<field name="model">wizard.rekap.purchase.requisition</field>
+			<field name="inherit_id" ref="c10i_purchase.wizard_report_rekap_purchase_requisition"/>
+			<field name="arch" type="xml">
+
+				<!--add document_type_ids field xpath after to_date field -->
+				<!--<xpath expr="//field[@name='date_stop']" position="after">
+					<field name="document_type_ids" options="{'no_create_edit': True}" widget="many2many_tags"/>
+				</xpath>-->
+				<xpath expr="//field[@name='date_stop']" position="after">
+					<field name="operating_unit_ids" options="{'no_create_edit': True}" widget="many2many_tags"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

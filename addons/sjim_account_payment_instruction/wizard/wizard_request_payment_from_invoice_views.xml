@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="request_from_invoice_form">
+        <field name="name">wizard.request.payment.invoice.form</field>
+        <field name="model">wizard.request.payment.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Request Payment">
+                <group>
+                    <group>
+                        <field name="invoice_id" readonly="1" attrs="{'invisible': [('invoice_id','=',False)]}"/>
+                        <field name="invoice_advance_id" readonly="1" attrs="{'invisible': [('invoice_advance_id','=',False)]}"/>
+                        <field name="currency_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="scheduled_date" />
+                        <field name="date_due" />
+                        <field name="amount_to_pay" />
+                    </group>
+                </group>
+                <footer>
+                    <button name="create_request" string="Create Request" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_request_payment_from_invoice" model="ir.actions.act_window">
+         <field name="name">Request Payment</field>
+         <field name="res_model">wizard.request.payment.invoice</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="context">{'invoice_req': True}</field>
+         <field name="view_id" ref="request_from_invoice_form"/>
+         <field name="target">new</field>
+   </record>
+
+    <record id="action_request_payment_from_advance" model="ir.actions.act_window">
+         <field name="name">Request Payment</field>
+         <field name="res_model">wizard.request.payment.invoice</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="context">{'advance_req': True}</field>
+         <field name="view_id" ref="request_from_invoice_form"/>
+         <field name="target">new</field>
+   </record>
+
+    <!--<record model="ir.ui.view" id="request_from_invoice_form">-->
+        <!--<field name="name">wizard.request.payment.invoice.form</field>-->
+        <!--<field name="model">wizard.request.payment.invoice</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<form string="Request Payment">-->
+                <!--<group>-->
+                    <!--<group>-->
+                        <!--<field name="invoice_id" readonly="1"/>-->
+                        <!--<field name="currency_id" readonly="1"/>-->
+                    <!--</group>-->
+                    <!--<group>-->
+                        <!--<field name="scheduled_date" />-->
+                        <!--<field name="date_due" />-->
+                        <!--<field name="amount_to_pay" />-->
+                    <!--</group>-->
+                <!--</group>-->
+                <!--<footer>-->
+                    <!--<button name="create_request" string="Create Request" type="object" class="btn-primary"/>-->
+                    <!--<button string="Cancel" class="btn-default" special="cancel"/>-->
+                <!--</footer>-->
+            <!--</form>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <!--<record id="action_request_payment_from_invoice" model="ir.actions.act_window">-->
+         <!--<field name="name">Request Payment</field>-->
+         <!--<field name="res_model">wizard.request.payment.invoice</field>-->
+         <!--<field name="type">ir.actions.act_window</field>-->
+         <!--<field name="view_type">form</field>-->
+         <!--<field name="view_mode">tree,form</field>-->
+         <!--<field name="view_id" ref="request_from_invoice_form"/>-->
+         <!--<field name="target">new</field>-->
+   <!--</record>-->
+</odoo>

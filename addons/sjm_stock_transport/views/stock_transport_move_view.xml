@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data> 
+
+		<record id="stock_transport_move_tree_view" model="ir.ui.view">
+            <field name="name">stock.transport.move.tree.view</field>
+            <field name="model">stock.transport.move</field>
+            <field name="arch" type="xml">
+                <tree string="Transport Move" create="false" edit="false" delete="false">
+                	<field name="date"/>
+	                <field name="partner_id"/>
+	                <field name="product_id"/>
+	                <field name="src_location_id"/>
+	                <field name="dest_location_id"/>
+	                <field name="rate_type"/>
+	                <field name="product_qty"/>
+	                <field name="price_unit"/>
+	                <field name="contract_id"/>
+	                <field name="accrued"/>
+	                <field name="invoiced"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_stock_transport_move_search" model="ir.ui.view">
+            <field name="name">stock.transport.move.search</field>
+            <field name="model">stock.transport.move</field>
+            <field name="arch" type="xml">
+                <search string="Search Data Move">
+                    <field name="date"/>
+	                <field name="partner_id"/>
+	                <field name="product_id"/>
+	                <field name="src_location_id"/>
+	                <field name="dest_location_id"/>
+	                <field name="rate_type"/>
+	                <filter string="Accrued" domain="[('accrued','=',True)]"/>
+	                <filter string="Invoiced" domain="[('invoiced','=',True)]"/>
+                </search>
+            </field>
+        </record>
+
+		<record model="ir.ui.view" id="stock_transport_move_form_view">
+		    <field name="name">stock.transport.move.form</field>
+		    <field name="model">stock.transport.move</field>
+		    <field name="arch" type="xml">
+		        <form string="Transport Data" create="false" edit="false" delete="false">
+		             <group col="4">
+		             	<field name="date"/>
+		                <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
+		                <field name="product_id" options="{'no_open': True, 'no_create': True}"/>
+		                <field name="src_location_id" required="1" options="{'no_open': True, 'no_create': True}"/>
+		                <field name="dest_location_id" required="1" options="{'no_open': True, 'no_create': True}"/>
+		                <field name="relasi"/>
+		                <field name="rate_type"/>
+		                <field name="product_qty"/>
+		                <field name="price_unit"/>
+		                <field name="contract_id"/>
+		                <field name="purchase_id"/>
+		                <field name="accrued" readonly="1"/>
+	                	<field name="invoiced" readonly="1"/>
+	                	<field name="product_spk_id"/>
+		            </group>
+		        </form>
+		    </field>
+		</record> 
+
+		<record model="ir.actions.act_window" id="action_stock_transport_move">
+		    <field name="name">Transport Data</field>
+		    <field name="res_model">stock.transport.move</field>
+		    <field name="view_type">form</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+	
+		<menuitem id="menu_stock_transport_cost" name="Transport Cost" parent="purchase.menu_purchase_root" groups="group_stock_transport_user"/>
+		<menuitem id="stock_transport_move_menu" name="Transport Data" parent="menu_stock_transport_cost" action="action_stock_transport_move" sequence="3"/>
+
+	</data>
+</odoo>

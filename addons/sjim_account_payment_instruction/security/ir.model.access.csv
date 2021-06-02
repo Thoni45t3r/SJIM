@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+payment_instruction_1,account_payment_request user,model_account_payment_request,group_user_payment_request,1,1,1,0
+payment_instruction_2,account_payment_request_line user,model_account_payment_request_line,group_user_payment_request,1,1,1,1
+payment_instruction_3,account_payment_instruction user,model_account_payment_instruction,group_user_payment_instruction,1,1,1,0
+payment_instruction_4,account_payment_instruction_line user,model_account_payment_instruction_line,group_user_payment_instruction,1,1,1,1
+payment_instruction_5,account_payment_request ins user,model_account_payment_request,group_user_payment_instruction,1,1,1,1

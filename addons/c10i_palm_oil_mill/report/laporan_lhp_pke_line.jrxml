@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laporan_lhp_pke_line" language="groovy" pageWidth="280" pageHeight="555" orientation="Landscape" columnWidth="280" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8fadf44c-b530-4668-866a-e82e0cdb97a5">
+	<property name="ireport.zoom" value="2.357947691000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="mu_id" class="java.lang.Integer"/>
+	<parameter name="mu_date" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT sl.name AS lokasi,
+	(SELECT pu.name
+		FROM product_product pp
+		LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
+		LEFT JOIN product_uom pu ON pu.id = pt.uom_id
+		WHERE pp.id = 5522) AS pke_uom,
+	(SELECT sum(product_qty) as qty
+         FROM ((select product_qty
+			from stock_move
+                        where product_id= 5522
+				and location_id<>sl.id
+				and location_dest_id=sl.id
+                                and (date + INTERVAL '7 hours')::TIMESTAMP<($P{mu_date} ||' 23:59:59')::TIMESTAMP
+                                and state='done')
+               UNION ALL
+                (select -1*product_qty
+			from stock_move
+                        where product_id= 5522
+				and location_id=sl.id
+				and location_dest_id<>sl.id
+                                and (date + INTERVAL '7 hours')::TIMESTAMP<($P{mu_date} ||' 23:59:59')::TIMESTAMP
+                                and state='done')
+               ) dummy ) AS pke_qty,
+        (SELECT sum(product_qty) as qty
+         FROM ((select product_qty
+			from stock_move
+                        where product_id= 5522
+				and location_id NOT IN (15,35,64)
+				and location_dest_id IN (15,35,64)
+                                and (date + INTERVAL '7 hours')::TIMESTAMP<($P{mu_date} ||' 23:59:59')::TIMESTAMP
+                                and state='done')
+               UNION ALL
+                (select -1*product_qty
+			from stock_move
+                        where product_id= 5522
+				and location_id IN (15,35,64)
+				and location_dest_id NOT IN (15,35,64)
+                                and (date + INTERVAL '7 hours')::TIMESTAMP<($P{mu_date} ||' 23:59:59')::TIMESTAMP
+                                and state='done')
+               ) dummy ) AS total_qty
+FROM stock_location sl
+WHERE sl.id IN (15,35,64)
+ORDER BY sl.name]]>
+	</queryString>
+	<field name="lokasi" class="java.lang.String"/>
+	<field name="pke_uom" class="java.lang.String"/>
+	<field name="pke_qty" class="java.lang.Double"/>
+	<field name="total_qty" class="java.lang.Double"/>
+	<group name="lokasi">
+		<groupExpression><![CDATA[$F{lokasi}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="0" y="0" width="125" height="15" uuid="0c54fd3b-309a-43c8-b9b6-1ff875950d7f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lokasi} == null ? " - " : $F{lokasi}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="125" y="0" width="50" height="15" uuid="616c9253-9f50-4fa3-9e38-c996c9dcbf78"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pke_uom} == null ? " - " : $F{pke_uom}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="175" y="0" width="102" height="15" uuid="6206c863-7cf9-4f8c-b9ee-d4b0eb72dee2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pke_qty} == null ? " - " : $F{pke_qty}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="15">
+			<staticText>
+				<reportElement x="0" y="0" width="175" height="15" uuid="86cee12f-123b-45f8-a9b5-6498a996db2f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+					<paragraph leftIndent="1"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="175" y="0" width="102" height="15" uuid="ba8fb520-b697-452e-9329-c21e97a08ce9"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_qty} == null ? " - " : $F{total_qty}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sjm_document_type_form_view" model="ir.ui.view">
+            <field name="name">sjm.document.type.form.view</field>
+            <field name="model">res.document.type</field>
+            <field name="priority">17</field>
+            <field name="inherit_id" ref="c10i_document_type.view_res_document_type_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]" position="after">
+                    <group string="Contract Configuration" attrs="{'invisible':[('sales', '=', False)]}">
+                        <group string="Shipping Information" name="sale_shipping">
+                            <field name="source_warehouse_note"/>
+                            <field name="picking_location_note"/>
+                            <field name="delivery_of_goods"/>
+                            <field name="quantity_note"/>
+                            <field name="other_claim"/>
+                        </group>
+                        <group string="Kualitas" name="sale_quality_sjim">
+                            <label for="quality_ffa"/>
+                            <div class="o_row">
+                                <field name="quality_ffa"/>
+                                <label string="%"/>
+                            </div>
+                            <label for="quality_mni"/>
+                            <div class="o_row">
+                                <field name="quality_mni"/>
+                                <label string="%"/>
+                            </div>
+                            <label for="quality_iv"/>
+                            <div class="o_row">
+                                <field name="quality_iv"/>
+                                <label string="%"/>
+                            </div>
+                            <field name="quality_claim"/>
+                            <field name="quality_note"/>
+                        </group>
+                        <group string="Payment Information" name="sale_payment_sjim">
+                            <field name="price_statement_rule"/>
+                            <field name="partner_bank_id"/>
+                            <field name="payment_term_note"/>
+                            <field name="ppn_include"/>
+                        </group>
+                        <group string="Payment Information" name="sale_reporting_sjim">
+                            <field name="sign_seller"/>
+                            <field name="sign_buyer"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

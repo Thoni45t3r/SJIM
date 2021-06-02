@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!--====================Defining the Wizard View==================-->
+        <record id='wizard_general_ledger_by_locations' model="ir.ui.view">
+            <field name="name">Report General Ledger By Locations</field>
+            <field name="model">wizard.general.ledger.by.locations</field>
+         	<field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Report General Ledger By Locations">
+                    <group>
+                        <group>
+                            <field name="from_date" required='1'/>
+                            <field name="report_type" required="1"/>
+                            <field name="target_move" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="to_date" required='1'/>
+                            <field name="company_id" widget="selection"/>
+							<field name="operating_unit_ids" widget="many2many_tags" options="{'no_create_edit':True, 'no_create':True, 'no_open':True}" required='1'/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button icon="fa-print" name="create_report" string="Print" type="object" colspan="2" default_focus="1" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_report_general_ledger_by_locations">
+            <field name="name">Report General Ledger By Locations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.general.ledger.by.locations</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_general_ledger_by_locations"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="General Ledger by Locations" parent="account.menu_finance_legal_statement" action="action_report_general_ledger_by_locations" id="menu_general_ledger_by_locations" icon="fa-print" sequence="10"/>
+    </data>
+</odoo>

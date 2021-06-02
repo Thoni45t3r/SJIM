@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data> 
+
+		<record id="view_delivery_order_wb_tree" model="ir.ui.view">
+            <field name="name">view.delivery.order.wb</field>
+            <field name="model">delivery.order.weighbridge</field>
+            <field name="arch" type="xml">
+                <tree string="Delivery Order">
+	                <field name="name"/>
+                	<field name="asal"/>
+	                <field name="tujuan"/>
+	                <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="delivery_order_wb_search" model="ir.ui.view">
+            <field name="name">delivery.order.wb.search</field>
+            <field name="model">delivery.order.weighbridge</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+	                <field name="name"/>
+                    <field name="asal"/>
+	                <field name="tujuan"/>
+	                <field name="state"/>
+                </search>
+            </field>
+        </record>
+
+		<record model="ir.ui.view" id="view_delivery_order_wb_form">
+		    <field name="name">view.delivery.order.wb.form</field>
+		    <field name="model">delivery.order.weighbridge</field>
+		    <field name="arch" type="xml">
+		        <form string="Delivery Order">
+		        	<header>
+		        		<button name="action_confirm" string="Validate" states="draft" class="oe_highlight" type="object"/>
+		        		<button name="action_draft" string="Set to Draft" states="confirmed" type="object"/>
+		        		<field name="state" widget="statusbar" readonly="1"/>
+		        	</header>
+		        	<sheet>
+		             	<group>
+		             		<group>
+		             			<field name="name" attrs="{'readonly': [('state','!=','draft')]}"/>
+		             		</group>
+		             		<group>
+		             			<field name="asal" attrs="{'readonly': [('state','!=','draft')]}" options="{'no_edit': True, 'no_create': True}"/>
+		             			<field name="tujuan" attrs="{'readonly': [('state','!=','draft')]}" options="{'no_edit': True, 'no_create': True}"/>
+		             		</group>
+			            </group>
+		        	</sheet>
+		        </form>
+		    </field>
+		</record> 
+
+		<record model="ir.actions.act_window" id="action_delivery_order_wb">
+		    <field name="name">Delivery Order</field>
+		    <field name="res_model">delivery.order.weighbridge</field>
+		    <field name="view_type">form</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+	
+		<menuitem id="delivery_order_weighbridge_menu" name="Delivery Order" parent="sjim_weighbridge.menu_master_weighbridge_scale" action="action_delivery_order_wb"/>
+
+	</data>
+</odoo>

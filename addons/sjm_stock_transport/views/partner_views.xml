@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_tax_transport" model="ir.ui.view">
+        <field name="name">res.partner.view.tax.transpot</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="sjm_base.res_partner_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='tax']/group/group[2]/field[@name='default_kode_transaksi']" position="after">
+                <field name="default_invoice_taxes_ids" widget="many2many_tags"/>
+                <field name="default_account_ongkos_angkut_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

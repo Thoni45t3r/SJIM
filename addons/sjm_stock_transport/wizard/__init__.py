@@ -1,0 +1,6 @@
+# import stock_transport_accrue_wizard
+# import stock_transport_invoice_wizard
+import stock_transport_report_wizard
+import stock_transport_report_purchase_wizard
+import stock_transport_report_sale_wizard
+import stock_transport_report_spk_wizard

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="mill_laboratory_analysis_form_view" model="ir.ui.view">
+        <field name="name">mill.laboratory.analysis.form</field>
+        <field name="model">mill.laboratory.analysis</field>
+        <field name="arch" type="xml">
+            <form string="Mill Laboratory Analysis">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" attrs="{'invisible': ['|',('state','!=','draft')]}"/>
+                    <button name="action_set_draft" string="Set Draft" type="object" states="confirmed"/>
+					<button name="create_report_lhp" string="Print LHP" type="object" states="done" class="oe_highlight"/>
+                    <button name="action_unbuild" string="Validate" type="object" states="confirmed" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="%(action_mill_order_moves)d"
+                                string="Moves" type="action" icon="fa-arrows-v" states="done"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Mill Laboratorium Analysis" nolabel="1" attrs="{'readonly': [('state','=','draft,confirmed,done')]}"/></h1>
+                    </div>
+					<section attrs="{'readonly': [('state','!=','draft')]}">
+						<h1 style="background-color: LightGray;"><center>INFORMASI UMUM</center></h1>
+						<group name="informasi_umum_date">
+							<group>
+								<field name="mill_order_id" string="Mill Order" attrs="{'readonly': [('state','!=','draft')]}"/>
+								<field name="date" string="Date" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
+							</group>
+							<group>
+								<field name="start_proses_date" string="Start Proses" attrs="{'readonly': [('state','!=','draft')]}"/>
+								<field name="stop_proses_date" string="Stop Proses" attrs="{'readonly': [('state','!=','draft')]}"/>
+							</group>
+						</group>
+						<group name="informasi_umum_produksi">
+							<group>
+								<field name="jumlah_jam_olah" attrs="{'readonly': [('state','!=','draft')]}"/>
+								<field name="jumlah_jam_stagnasi" attrs="{'readonly': [('state','!=','draft')]}"/>
+							</group>
+							<group>
+								<field name="kapasitas_produksi" attrs="{'readonly': [('state','!=','draft')]}"/>
+								<field name="stock_dalam_proses" attrs="{'readonly': [('state','!=','draft')]}"/>
+							</group>
+						</group>
+					</section>
+					<section attrs="{'readonly': [('state','!=','draft')]}">
+						<table style="width:100%;">
+							<tr>
+								<td><label style="background-color: LightGray; width: 90%; font-size:20px;" string="Perincian KWH Listrik Terpakai"/></td>
+								<td><label style="background-color: LightGray; width: 90%; font-size:20px;" string="Perincian KWH Boiler Terpakai"/></td>
+							</tr>
+						</table>
+						<group name="informasi_kwh">
+							<group name="kwh_listrik">
+								<group col="2">
+									<field name="kwh_listrik_awal" attrs="{'readonly': [('state','!=','draft')]}"/>
+									<field name="kwh_listrik_akhir" attrs="{'readonly': [('state','!=','draft')]}"/>
+								</group>
+							</group>
+							<group name="kwh_boiler">
+								<group col="2">
+									<field name="kwh_boiler_awal" attrs="{'readonly': [('state','!=','draft')]}"/>
+									<field name="kwh_boiler_akhir" attrs="{'readonly': [('state','!=','draft')]}"/>
+								</group>
+							</group>
+						</group>
+					</section>
+					<section attrs="{'readonly': [('state','!=','draft')]}">
+						<label style="background-color: LightGray; width: 100%; font-size:20px; text-align: left;" string="Perincian Solar Terpakai"/>
+						<group col="5">
+							<button name="generate_solar_stock" string="Generate Stock" type="object" states="draft" class="oe_highlight"/>
+						</group>
+						<group name="solar">
+							<group col="2">
+								<field name="stock_awal_solar" attrs="{'readonly': [('state','!=','draft')]}"/>
+								<field name="stock_akhir_solar" attrs="{'readonly': [('state','!=','draft')]}"/>
+							</group>
+							<group col="2">
+								<field name="pembelian_solar" attrs="{'readonly': [('state','!=','draft')]}"/>
+								<field name="solar_dipakai_mesin" attrs="{'readonly': [('state','!=','draft')]}"/>
+								<field name="solar_dipakai_alat" attrs="{'readonly': [('state','!=','draft')]}"/>
+							</group>
+						</group>
+					</section>
+					<section attrs="{'readonly': [('state','!=','draft')]}">
+						<h1 style="background-color: LightGray;"><center>Hasil Analisa Laboratorium</center></h1>
+						<!--<group col="5">
+							<button name="generate_lhp_tank" string="Generate FFA Tangki" type="object" states="draft" class="oe_highlight"/>
+						</group>-->
+					</section>
+					<table style="width:100%;" col="2">
+						<tr>
+							<td style="vertical-align: top;" width="15%" colspan="1">
+								<label style="background-color: LightGray; width: 100%; font-size:18px; text-align: left;" string="Stock Awal PKE per Gudang"/>
+                                <table width="46%" border="1">
+									<field name="lhp_pke_lines" attrs="{'readonly': [('state','!=','draft')]}">
+                                        <tree editable="bottom">
+                                            <field name="location_id" string="Lokasi" options="{'no_open': True, 'no_create': True}" domain="[('usage','=','internal'), ('active','=',True)]"/>
+											<field name="warehouse_id" string="Gudang" options="{'no_open': True, 'no_create': True}" domain="[('active','=',True)]"/>
+											<field name="unit_of_measure" string="Satuan" options="{'no_open': True, 'no_create': True}"/>
+											<field name="stock_quantity" string="Stock Quantity"/>
+                                        </tree>
+                                    </field>
+                                </table>
+                            </td>
+							<td style="vertical-align: top;" width="4%" >
+								<table width="4%"/>
+							</td>
+							<td style="vertical-align: top;" width="15%" colspan="1">
+								<label style="background-color: LightGray; width: 100%; font-size:18px; text-align: left;" string="Stock Awal PKO per Tank"/>
+                                <table width="46%" border="1">
+									<field name="lhp_pko_lines" attrs="{'readonly': [('state','!=','draft')]}">
+                                        <tree editable="bottom">
+                                            <field name="location_id" string="Lokasi" options="{'no_open': True, 'no_create': True}" domain="[('usage','=','internal'), ('active','=',True)]"/>
+                                            <field name="storage_id" string="Storage Tank" options="{'no_open': True, 'no_create': True}"/>
+											<field name="unit_of_measure" string="Satuan" options="{'no_open': True, 'no_create': True}"/>
+											<field name="ffa_mix" string="FFA"/>
+											<field name="iv_mix" string="IV"/>
+											<field name="stock_quantity" string="Stock Quantity"/>
+                                        </tree>
+                                    </field>
+                                </table>
+                            </td>
+							<td style="vertical-align: top;" width="4%" >
+								<table width="4%"/>
+							</td>
+						</tr>
+					</table>
+					<table style="width:46%;">
+						<tr>
+							<td style="vertical-align: top;" width="15%" colspan="1">
+								<label style="background-color: LightGray; width: 100%; font-size:18px; text-align: left;" string="Perincian FFA Bungkil"/>
+                                <table width="46%" border="1">
+									<field name="lhp_analisa_lab_pke_lines" attrs="{'readonly': [('state','!=','draft')]}">
+                                        <tree editable="bottom"> 
+											<field name="shift" string="Shift"/>
+											<field name="line" string="Line"/>
+                                            <field name="minyak_bungkil" string="Minyak Bungkil"/>
+                                            <field name="kadar_air" string="Kadar Air"/>
+											<field name="ffa" string="FFA"/>
+                                            <field name="iv" string="IV"/>
+                                        </tree>
+                                    </field>
+                                </table>
+                            </td>
+						</tr>
+					</table>
+					<table style="width:100%;">
+						<tr>
+							<td style="vertical-align: top;" width="15%" colspan="1">
+							<label style="background-color: LightGray; width: 100%; font-size:18px; text-align: left;" string="Pengiriman Product CPKO dan BUNGKIL"/>
+                                <table width="45%" border="1">
+									<field name="lhp_kontrak_line" attrs="{'readonly': [('state','!=','draft')]}">
+                                        <tree editable="bottom">
+											<field name="order_id" string="Kontrak" options="{'no_open': True, 'no_create': True}"/>
+											<field name="date" string="Tanggal Kontrak"/>
+											<field name="partner_id" string="Customer" options="{'no_open': True, 'no_create': True}"/>
+											<field name="unit_of_measure" string="Satuan" options="{'no_open': True, 'no_create': True}"/>
+											<field name="product_uom_qty" string="Order Quantity"/>
+											<field name="qty_delivered" string="Qty Delivered"/>
+                                        </tree>
+                                    </field>
+                                </table>
+                            </td>
+						</tr>
+					</table>
+					<table style="width:100%;">
+						<tr>
+							<td style="vertical-align: top;" width="15%" colspan="1">
+							<label style="background-color: LightGray; width: 100%; font-size:18px; text-align: left;" string="Catatan Kerusakan dan Komentar"/>
+                                <table width="45%" border="1">
+									<field name="lhp_note_lines" attrs="{'readonly': [('state','!=','draft')]}">
+                                        <tree editable="bottom">
+											<field name="note" string="Catatan"/>
+                                        </tree>
+                                    </field>
+                                </table>
+                            </td>
+						</tr>
+					</table>
+                </sheet>
+            </form>
+        </field>
+    </record>
+	
+	<record id="mill_laboratory_analysis_tree_view" model="ir.ui.view">
+        <field name="name">mill.laboratory.analysis.tree</field>
+        <field name="model">mill.laboratory.analysis</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+	
+	<record model="ir.actions.act_window" id="action_mill_laboratory_analysis">
+        <field name="name">Mill Laboratory Analysis</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mill.laboratory.analysis</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to start a new Mill Laboratory Analysis
+          </p>
+        </field>
+    </record>
+	
+	<menuitem id="menu_mill_laboratory_analysis"
+          name="Mill Laboratory Analysis"
+          parent="menu_mill_periodic"
+          action="action_mill_laboratory_analysis"
+          sequence="7"/>
+</odoo>

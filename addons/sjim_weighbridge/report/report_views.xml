@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<report string  = "Rekapitulasi Timbangan"
+	        model   = "wizard.weighbridge.recap.metro"
+            auto    = "True"
+	        name    = "rekap_timbangan_internal_metro"
+	        rml     = "sjim_weighbridge/report/rekap_timbangan_internal.jrxml"
+	        id      = "rekap_timbangan_internal_metro"
+	        menu    = "False" />
+	<report string  = "Rekapitulasi Timbangan"
+	        model   = "wizard.weighbridge.recap.sampit"
+            auto    = "True"
+	        name    = "rekap_timbangan_internal_sampit"
+	        rml     = "sjim_weighbridge/report/rekap_timbangan_internal.jrxml"
+	        id      = "rekap_timbangan_internal_sampit"
+	        menu    = "False" />
+
+	<report string  = "Rekapitulasi Timbangan Beacukai"
+	        model   = "wizard.weighbridge.recap.metro"
+            auto    = "True"
+	        name    = "rekap_timbangan_beacukai_metro"
+	        rml     = "sjim_weighbridge/report/rekap_timbangan_beacukai.jrxml"
+	        id      = "rekap_timbangan_beacukai_metro"
+	        menu    = "False" />
+	<report string  = "Rekapitulasi Timbangan Beacukai"
+	        model   = "wizard.weighbridge.recap.sampit"
+            auto    = "True"
+	        name    = "rekap_timbangan_beacukai_sampit"
+	        rml     = "sjim_weighbridge/report/rekap_timbangan_beacukai.jrxml"
+	        id      = "rekap_timbangan_beacukai_sampit"
+	        menu    = "False" />
+</odoo>

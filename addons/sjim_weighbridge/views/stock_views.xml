@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Stock Picking -->
+    <record id="qc_weighbridge_picking_form" model="ir.ui.view">
+        <field name="name">qc.weighbridge.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            
+            <field name="origin" position="after">
+                <field name="tiket_timbang"/>
+            </field>
+
+            <field name="picking_type_id" position="after">
+                <field name="vendor_quality_ffa"/>
+                <field name="vendor_quality_ka"/>
+                <field name="vendor_quality_kk"/>
+                <field name="internal_quality_ffa"/>
+                <field name="internal_quality_ka"/>
+                <field name="internal_quality_kk"/>
+            </field>
+
+        </field>
+    </record>
+
+</odoo>

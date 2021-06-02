@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="kli_invoice_supplier_form_inherit_location">
+        <field name="name">kli.invoice.supplier.form.inherit.location</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="c10i_account_location.invoice_supplier_form_inherit_plantation"/>
+        <field name="arch" type="xml">
+            <field name="account_location_id" position="after">
+                <field name="account_account_location_ids" widget="many2many_tags" invisible="1"/>
+            </field>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
+                <attribute name="domain">[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False),('id', 'in', account_account_location_ids[0][2])]</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

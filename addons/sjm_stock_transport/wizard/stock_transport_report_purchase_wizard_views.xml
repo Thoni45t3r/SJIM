@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+    <record id="stock_transport_report_purchase_wizard_form_view" model="ir.ui.view">
+		<field name="name">Create Purchase Transport Report</field>
+		<field name="model">stock.transport.report.purchase.wizard</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+	        <form string="Create Purchase Transport Report">
+	        	<group>
+	   				<label for="start_date" string="Periode"/>
+                        <div >
+                            <field name="date_start" class="oe_inline" placeholder="Start Date"/> - <field name="date_end" class="oe_inline" placeholder="End Date" />
+                        </div>
+                    <field name="product_id" />
+	        	</group>
+	        	<group>
+	        		<field name="company_id" invisible="1"/>
+	          	</group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+	          	
+	        </form>
+    	</field>
+    </record>
+
+    <record id="action_stock_transport_report_purchase_wizard" model="ir.actions.act_window">
+		<field name="name">Create Purchase Transport Report</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">stock.transport.report.purchase.wizard</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="stock_transport_report_purchase_wizard_form_view"/>
+		<field name="target">new</field>
+    </record>
+
+    <report string  = "Report Purchase Transport Data Xlsx"
+            model   = "stock.transport.report.purchase.wizard"
+            auto    = "True"
+            report_type = "xlsx"
+            name    = "report_transport_data_purchase_xlsx"
+            id      = "report_transport_data_purchase_xlsx"
+            menu    = "True"
+    />
+
+	<menuitem id='stock_transport_report_purchase_wizard_menu' name="Transport Report Pembelian" parent='stock_transport_report_menu' action='action_stock_transport_report_purchase_wizard' sequence="8"/>  
+            
+	</data>
+</odoo>

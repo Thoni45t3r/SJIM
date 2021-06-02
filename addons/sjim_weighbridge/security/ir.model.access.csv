@@ -1,0 +1,27 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_weighbridge_scale_1,weighbridge.partner wbadmin,model_weighbridge_partner,group_odoo_weighbridge_admin,1,1,1,1
+access_weighbridge_scale_2,weighbridge.product wbadmin,model_weighbridge_product,group_odoo_weighbridge_admin,1,1,1,1
+access_weighbridge_scale_3,weighbridge.picking.type wbadmin,model_weighbridge_picking_type,group_odoo_weighbridge_admin,1,1,1,1
+access_weighbridge_scale_4,weighbridge.contract wbadmin,model_weighbridge_contract,group_odoo_weighbridge_admin,1,1,1,1
+access_weighbridge_scale_5,product.product wbadmin,product.model_product_product,group_odoo_weighbridge_admin,1,0,0,0
+access_weighbridge_scale_6,res.partner wbadmin,base.model_res_partner,group_odoo_weighbridge_admin,1,0,0,0
+access_weighbridge_scale_7,picking.type wbadmin,stock.model_stock_picking_type,group_odoo_weighbridge_admin,1,0,0,0
+access_weighbridge_scale_8,sale.order wbadmin,sale.model_sale_order,group_odoo_weighbridge_admin,1,0,0,0
+access_weighbridge_scale_9,purchase.order wbadmin,purchase.model_purchase_order,group_odoo_weighbridge_admin,1,0,0,0
+access_weighbridge_scale_10,weighbridge.scale.metro admin,model_weighbridge_scale_metro,group_odoo_weighbridge_admin,1,1,1,0
+access_weighbridge_scale_11,weighbridge.scale.sampit admin,model_weighbridge_scale_sampit,group_odoo_weighbridge_admin,1,1,1,0
+access_weighbridge_scale_12,manual.import.dharmala admin,model_manual_import_dharmala,group_odoo_weighbridge_admin,1,1,1,1
+access_weighbridge_scale_13,manual.import.dharmala.line admin,model_manual_import_dharmala_line,group_odoo_weighbridge_admin,1,1,1,1
+access_weighbridge_scale_14,import.rekap.timbang admin,model_import_rekap_timbang,group_odoo_weighbridge_admin,1,1,1,1
+access_weighbridge_scale_15,import.rekap.timbang.line admin,model_import_rekap_timbang_line,group_odoo_weighbridge_admin,1,1,1,1
+access_weighbridge_scale_16,weighbridge.partner beacukai,model_weighbridge_partner,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0
+access_weighbridge_scale_17,weighbridge.product beacukai,model_weighbridge_product,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0
+access_weighbridge_scale_18,weighbridge.picking.type beacukai,model_weighbridge_picking_type,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0
+access_weighbridge_scale_19,weighbridge.contract beacukai,model_weighbridge_contract,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0
+access_weighbridge_scale_20,product.product beacukai,product.model_product_product,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0
+access_weighbridge_scale_21,res.partner beacukai,base.model_res_partner,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0
+access_weighbridge_scale_22,picking.type beacukai,stock.model_stock_picking_type,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0
+access_weighbridge_scale_23,sale.order beacukai,sale.model_sale_order,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0
+access_weighbridge_scale_24,purchase.order beacukai,purchase.model_purchase_order,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0
+access_weighbridge_scale_25,weighbridge.scale.metro beacukai,model_weighbridge_scale_metro,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0
+access_weighbridge_scale_26,weighbridge.scale.sampit beacukai,model_weighbridge_scale_sampit,c10i_bea_cukai.group_bea_cukai_user,1,0,0,0

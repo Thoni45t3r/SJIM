@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laporan_lhp_lab_line" language="groovy" pageWidth="430" pageHeight="595" orientation="Landscape" columnWidth="430" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bbcd3e32-1008-48bf-864c-a89207ddad0e">
+	<property name="ireport.zoom" value="2.853116706110003"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="mu_id" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT DISTINCT ms.name AS lab_storage,
+	mlpl.stock_quantity_awal AS qty_awal,
+	((SELECT SUM(ffa_tank)
+		FROM mill_lhp_analisa_lab_pko af
+		WHERE af.storage_id = mlaf.storage_id
+			AND af.unbuild_id = mlaf.unbuild_id) /
+	 (SELECT COUNT(ffa_tank)
+		FROM mill_lhp_analisa_lab_pko af
+		WHERE af.storage_id = mlaf.storage_id
+			AND af.unbuild_id = mlaf.unbuild_id)) AS ffa_tank,
+	((SELECT SUM(iv_tank)
+		FROM mill_lhp_analisa_lab_pko af
+		WHERE af.storage_id = mlaf.storage_id
+			AND af.unbuild_id = mlaf.unbuild_id) /
+	 (SELECT COUNT(iv_tank)
+		FROM mill_lhp_analisa_lab_pko af
+		WHERE af.storage_id = mlaf.storage_id
+			AND af.unbuild_id = mlaf.unbuild_id)) AS iv_tank,
+	((SELECT SUM(ffa_production)
+		FROM mill_lhp_analisa_lab_pko af
+		WHERE af.storage_id = mlaf.storage_id
+			AND af.unbuild_id = mlaf.unbuild_id) /
+	 (SELECT COUNT(ffa_production)
+		FROM mill_lhp_analisa_lab_pko af
+		WHERE af.storage_id = mlaf.storage_id
+			AND af.unbuild_id = mlaf.unbuild_id)) AS ffa_prod,
+	((SELECT SUM(iv_production)
+		FROM mill_lhp_analisa_lab_pko af
+		WHERE af.storage_id = mlaf.storage_id
+			AND af.unbuild_id = mlaf.unbuild_id) /
+	 (SELECT COUNT(iv_production)
+		FROM mill_lhp_analisa_lab_pko af
+		WHERE af.storage_id = mlaf.storage_id
+			AND af.unbuild_id = mlaf.unbuild_id)) AS iv_prod
+FROM mill_lhp_analisa_lab_pko mlaf
+LEFT JOIN mill_lhp_pko_line mlpl ON mlpl.unbuild_id = mlaf.unbuild_id AND mlpl.storage_id = mlaf.storage_id
+LEFT JOIN mill_storage ms ON ms.id = mlaf.storage_id
+    WHERE mlaf.unbuild_id=$P{mu_id}
+    ORDER BY ms.name ASC]]>
+	</queryString>
+	<field name="lab_storage" class="java.lang.String"/>
+	<field name="qty_awal" class="java.lang.Double"/>
+	<field name="ffa_tank" class="java.lang.Double"/>
+	<field name="iv_tank" class="java.lang.Double"/>
+	<field name="ffa_prod" class="java.lang.Double"/>
+	<field name="iv_prod" class="java.lang.Double"/>
+	<group name="lab_storage">
+		<groupExpression><![CDATA[$F{lab_storage}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="0" y="0" width="100" height="15" uuid="aa727009-b522-40f3-af51-e36d4488b5ff"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lab_storage} == null ? " - " : $F{lab_storage}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="100" y="0" width="75" height="15" uuid="604e52c9-f8bf-4598-bfb9-9b03d48d7224"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty_awal} == null ? " - " : $F{qty_awal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(-#,##0.00)">
+				<reportElement x="175" y="0" width="63" height="15" uuid="b4b2e803-14ca-49c6-86ba-40ebb7887462"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ffa_tank} == null ? " - " : $F{ffa_tank}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(-#,##0.00)">
+				<reportElement x="238" y="0" width="62" height="15" uuid="b307fe48-1b01-4513-8ee2-02721a03f33d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{iv_tank} == null ? " - " : $F{iv_tank}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(-#,##0.00)">
+				<reportElement x="300" y="0" width="62" height="15" uuid="15dcc3ce-3b8a-4319-98a8-13edf0d88972"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ffa_prod} == null ? " - " : $F{ffa_prod}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(-#,##0.00)">
+				<reportElement x="362" y="0" width="65" height="15" uuid="af11be63-333f-4cb3-a720-c53e387b1ce4"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{iv_prod} == null ? " - " : $F{iv_prod}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

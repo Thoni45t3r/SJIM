@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sale_sequence_view_inherits" model="ir.ui.view">
+            <field name="name">sale.sequence.view.inherits</field>
+            <field name="model">ir.sequence</field>
+            <field name="inherit_id" ref="sjm_base.sequence_view_inherits" />
+            <field name="priority" eval="19" />
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page[1]/group[3]" position="inside">
+                    <group>
+                        <label colspan="2" string="Partner Sale: custom_partner"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

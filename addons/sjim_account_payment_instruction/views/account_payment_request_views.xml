@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_finance_payment_request" parent="c10i_account.menu_finance_payment_bank_cash" name="Payment Instruction" sequence="110"/>
+
+    <record id="view_account_payment_request_form" model="ir.ui.view">
+        <field name="name">view.account.payment.request.form</field>
+        <field name="model">account.payment.request</field>
+        <field name="arch" type="xml">
+            <form string="Payment Requests" >
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label string="Nama" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Source Document" required="1" readonly="1"/></h1>
+                    </div>
+                    <group name="partner_info">
+                        <group>
+                            <field name="partner_id" />
+                        </group>
+                        <group>
+                            <field name="invoice_id" options="{'no_create': True, 'no_edit': True}" domain="[('state','=','open'), ('partner_id','=',partner_id)]" attrs="{'invisible': ['|',('invoice_advance_id','!=',False),('line_ids','!=',[])]}"/>
+                            <field name="invoice_advance_id" options="{'no_create': True, 'no_edit': True}" domain="[('state','=','open'), ('partner_id','=',partner_id)]" attrs="{'invisible': ['|',('invoice_id','!=',False),('line_ids','!=',[])]}"/>
+                            <field name="full_reconcile" attrs="{'invisible': [('invoice_id','=',False),('invoice_advance_id','=',False)]}"/>
+                            <field name="amount" />
+                        </group>
+                    </group>
+                    <group name="payment_info">
+                        <group>
+                            <field name="date" />
+                            <field name="date_due" />
+                            <field name="memo" />
+                        </group>
+                        <group>
+                            <field name="operating_unit_id" />
+                            <field name="currency_id" />
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="request_line" string="Request Lines" attrs="{'invisible': ['|',('invoice_id','!=',False),('invoice_advance_id','!=',False)]}">
+                            <field name="line_ids" context="{'default_operating_unit_id': operating_unit_id}">
+                                <tree editable="bottom">
+                                    <field name="name" />
+                                    <field name="currency_id" invisible="1" readonly="1"/>
+                                    <field name="operating_unit_id" />
+                                    <field name="account_location_type_id" options="{'no_create_edit':True, 'no_create':True}"/>
+                                    <field name="account_location_id" domain="[('type_id','=',account_location_type_id)]" attrs="{'readonly': [('account_location_type_no_location', '=', True)], 'required': [('account_location_type_no_location', '=', False)]}" options="{'no_create_edit':True, 'no_create':True}"/>
+                                    <field name="account_location_type_no_location" invisible="1"/>
+                                    <field name="account_account_location_ids" widget="many2many_tags" invisible="1"/>
+                                    <field name="account_id" domain="[('user_type_id.name','!=','View'),('id', 'in', account_account_location_ids[0][2])]" options="{'no_create': True, 'no_open': True}"/>
+                                    <!--<field name="account_id" options="{'no_create': True, 'no_edit': True}" domain="[('deprecated','=',False)]"/>-->
+                                    <field name="amount" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_payment_request_tree" model="ir.ui.view">
+        <field name="name">view.account.payment.request.tree</field>
+        <field name="model">account.payment.request</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Requests"  colors="red:state=='draft';grey:state=='done'">
+                <field name='name'/>
+                <field name='partner_id'/>
+                <field name="amount" sum="amount"/>
+                <field name='currency_id'/>
+                <field name='date'/>
+                <field name='user_id'/>
+                <field name='state'/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_payment_request_filter" model="ir.ui.view">
+        <field name="name">view.account.payment.request.filter</field>
+        <field name="model">account.payment.request</field>
+        <field name="arch" type="xml">
+            <search string="Payment Requests">
+                <filter string="My Requests" domain="[('user_id','=',uid)]" name="my_payment_request_filter"/>
+                <field name="name" string="Search" filter_domain="[('name','ilike',self)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Requested By" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_payment_request" model="ir.actions.act_window">
+        <field name="name">Payment Requests</field>
+        <field name="res_model">account.payment.request</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_account_payment_request_filter"/>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Create to add a new Payment Request Entry
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_account_payment_request" parent="menu_finance_payment_request" action="action_account_payment_request" sequence="20"/>
+</odoo>

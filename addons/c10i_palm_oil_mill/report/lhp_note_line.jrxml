@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="lhp_note_line" language="groovy" pageWidth="725" pageHeight="842" columnWidth="725" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3dcafda2-bc28-402f-b7ce-d9de0809813c">
+	<property name="ireport.zoom" value="1.6105100000000014"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="mla_id" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT mlnl.note AS catatan
+    FROM mill_lhp_note_line mlnl
+    WHERE mlnl.lab_id =$P{mla_id}
+    ORDER BY mlnl.id ASC]]>
+	</queryString>
+	<field name="catatan" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="25" y="0" width="696" height="15" uuid="135c7d2d-21f3-4540-83d6-4dc48531a7e9"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{catatan} == null ? " - " : $F{catatan}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="0" y="0" width="25" height="15" uuid="b21dd0ad-3c02-4d3a-81df-3c560fc9c1d8"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_packing_list_document">
+    <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+    <t t-set="company" t-value="o.company_id"/>
+    <t t-set="partner" t-value="o.partner_id"/>
+    <div class="header col-xs-12">
+        <center style="font-size:20pt;"><span t-field="o.company_id"/></center>
+        <i>
+            <center><span t-field="company.street"/>,&#160;<span t-field="company.street2"/></center>
+            <center><span t-field="company.city"/>&#160;-&#160;<span t-field="company.state_id"/></center>
+        </i>
+        <div class="row zero_min_height">
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="page">
+        <div class="oe_structure"/>
+        <div class="col-xs-12">
+            <center style="font-size:20pt;"><u>PACKING LIST</u></center>        
+            <center><span t-field="o.name"/></center>        
+        </div>
+        <div class="col-xs-9">
+            <td style="font-size: 12px"><strong>Kepada Yth:</strong></td>
+            <!--<div t-if="o.partner_id">
+                <div t-field="o.partner_id"
+                    t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+            </div>-->
+			<div>
+			<td style="font-size: 12px"><span t-field="partner.name"/></td>
+			</div>
+			<div>
+			<td style="font-size: 12px"><span t-field="partner.street"/></td>
+			</div>
+			<div>
+			<td style="font-size: 12px"><span t-field="partner.city"/></td>
+			<td style="font-size: 12px"><span t-field="partner.zip"/></td>
+			</div>
+			<h4></h4>
+            <td style="font-size: 12px">NPWP :&#160;<span t-field="partner.npwp_number"/></td>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="text-center; border:1px solid black;">PRODUCT</th>
+                    <th style="text-center; border:1px solid black;">BRUTTO</th>
+                    <th style="text-center; border:1px solid black;">UoM</th>
+                    <th style="text-center; border:1px solid black;">Total Weight (Kg)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="o.packing_list_line_ids" t-as="l">
+                    <tr>
+                        <td style="border:1px solid black;"><span t-field="l.product_id"/></td>
+                        <td style="text-right; border:1px solid black;"><span t-field="l.product_uom_qty"/></td>
+                        <td style="text-right; border:1px solid black;"><span t-field="l.product_uom"/></td>
+                        <td style="text-right; border:1px solid black;"><span t-field="l.subtotal_weight"/></td>
+                    </tr>
+                </t>
+				<t t-foreach="o.packing_list_line_ids" t-as="l">
+					<tr>
+						<th style="border:1px solid black;" colspan="3"><i>Total Weight (Kg)</i></th>
+						<th style="text-right; border:1px solid black;"><i><span t-field="l.subtotal_weight"/></i></th>
+					</tr>
+				</t>
+            </tbody>
+        </table>
+        <div class="col-xs-9">
+			<t t-foreach="o.packing_list_line_ids" t-as="l">
+				<tr>
+					<td style="font-size: 12px">TERBILANG :</td>
+				</tr>
+				<h4>
+				</h4>
+				<tr>
+					<td style="font-size: 12px"><span t-esc="l.get_sub_total()"/></td>
+				</tr>
+			</t>
+        </div>
+        <div class="col-xs-12">
+            <div class="col-xs-6"/>
+            <div class="col-xs-6">
+                <h5><center><span t-field="company.city"/>,&#160;<span t-esc="datetime.datetime.strptime(o.date, '%Y-%m-%d').strftime('%d %b %Y')"/></center></h5>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <h5>
+                    <t t-if="o.sign_seller">
+                        <center><span t-field="o.sign_seller"/></center>
+                        <center><i><span t-field="o.sign_job_position"/></i></center>
+                    </t>
+                </h5>
+            </div>
+        </div>
+
+    </div>
+</template>
+
+<template id="report_packing_list_qweb">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="sjm_sale.report_packing_list_document" t-lang="o.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

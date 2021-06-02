@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laba_rugi_detail" language="groovy" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f6b188f6-4375-49cc-9b46-9e737ce9cee9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="code" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT code, name FROM account_account WHERE id=1]]>
+	</queryString>
+	<field name="code" class="java.lang.String">
+		<fieldDescription><![CDATA[Code]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="59" splitType="Stretch">
+			<textField>
+				<reportElement uuid="912cefbc-6ae4-4298-855e-46ea75528a4c" x="15" y="0" width="299" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="36ee08b3-497a-450a-9430-1081e4508182" x="358" y="0" width="333" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LABA RUGI DETAIL]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

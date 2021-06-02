@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!--====================Specifying the report========================-->
+        <report string="Report General Ledger By Account"
+            model="report.general.ledger.account"
+            auto="True"
+            name="report_general_ledger_account"
+            rml="sjm_account/reports/report_general_ledger_account.jrxml"
+            id="c10i_account.report_general_ledger_account"
+            menu="False"
+            />
+
+		<report string="Report General Ledger By Account Excel Edition"
+			model="report.general.ledger.account"
+			auto="True"
+			name="report_general_ledger_account_xls"
+			rml="sjm_account/reports/report_general_ledger_account_xls.jrxml"
+			id="c10i_account.report_general_ledger_account_xls"
+			menu="False"
+			/>
+
+        <report string   = "Bank/Cash Book"
+            model   = "wizard.cash.bank.book"
+            auto    = "True"
+            name    = "cash_bank_book_gl"
+            rml     = "sjm_account/reports/cash_bank_book.jrxml"
+            id      = "c10i_account.cash_bank_book_gl"/>
+
+        <report string   = "Outstanding Invoice"
+            model   = "wizard.report.outstanding.invoice"
+            auto    = "True"
+            report_type="xlsx"
+            name    = "sjim_account_invoice_outstanding"
+            id      = "sjim_account_invoice_outstanding"/>
+    </data>
+</odoo>

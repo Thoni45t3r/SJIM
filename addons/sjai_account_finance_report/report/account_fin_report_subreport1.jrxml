@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="account_fin_report_subreport1" language="groovy" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="f3aff37e-34be-4706-93ae-65eecd075797">
+	<property name="ireport.zoom" value="1.771561000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="code" class="java.lang.String"/>
+	<parameter name="period_id" class="java.lang.Integer"/>
+	<parameter name="report_type_name" class="java.lang.String"/>
+	<parameter name="prev_month" class="java.util.Date"/>
+	<parameter name="current_month" class="java.util.Date"/>
+	<parameter name="states" class="java.lang.String">
+		<defaultValueExpression><![CDATA["()"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="state_query" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{states}.replace("[","(").replace("]",")").equals("()") || $P{states}.equals("") ? "TRUE" : "  m.state IN "+$P{states}.replace("[","(").replace("]",")")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    d.id as parent_id, d.code as parent_code, d.name as parent_name, SUBSTRING(d.code, 1, 1) AS char1_parent_code, d.parent_id AS parent_parent_id,
+    c.id as child1_id, c.code as child1_code, c.name as child1_name, SUBSTRING(c.code, 1, 1) AS char1_child1_code, c.parent_id AS child1_parent_id,
+    b.id as child2_id, b.code as child2_code, b.name as child2_name, SUBSTRING(b.code, 1, 1) AS char1_child2_code, b.parent_id AS child2_parent_id,
+    a.id as child3_id, a.code as child3_code, a.name as child3_name, SUBSTRING(a.code, 1, 1) AS char1_child3_code, a.parent_id AS child3_parent_id,
+    (SELECT SUM(COALESCE(ml.balance, 0.0))
+     FROM account_move_line AS ml LEFT JOIN account_move AS m ON ml.move_id=m.id
+     WHERE (ml.account_id IN (SELECT id FROM account_account WHERE parent_id = a.id
+         OR parent_id IN (SELECT id FROM account_account WHERE parent_id = a.id
+           OR parent_id IN (SELECT id FROM account_account WHERE parent_id = a.id
+	    OR parent_id IN (SELECT id FROM account_account WHERE parent_id = a.id))))
+             OR ml.account_id = a.id)
+         AND $P!{state_query} AND ml.date <= $P{current_month}) AS current_month,
+    (SELECT SUM(COALESCE(ml.balance, 0.0))
+     FROM account_move_line AS ml LEFT JOIN account_move AS m ON ml.move_id=m.id
+     WHERE (ml.account_id IN (SELECT id FROM account_account WHERE parent_id = a.id
+         OR parent_id IN (SELECT id FROM account_account WHERE parent_id = a.id
+           OR parent_id IN (SELECT id FROM account_account WHERE parent_id = a.id
+	    OR parent_id IN (SELECT id FROM account_account WHERE parent_id = a.id))))
+             OR ml.account_id = a.id)
+         AND $P!{state_query} AND ml.date <= $P{prev_month}) AS prev_month
+
+FROM account_account as a
+	full outer join account_account as b on a.parent_id=b.id
+	full outer join account_account as c on b.parent_id=c.id
+	full outer join account_account as d on c.parent_id=d.id
+
+WHERE true
+
+ORDER BY d.code, c.code, b.code, a.code ASC]]>
+	</queryString>
+	<field name="parent_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Parent Account]]></fieldDescription>
+	</field>
+	<field name="parent_code" class="java.lang.String"/>
+	<field name="parent_name" class="java.lang.String"/>
+	<field name="char1_parent_code" class="java.lang.String"/>
+	<field name="parent_parent_id" class="java.lang.Integer"/>
+	<field name="child1_id" class="java.lang.Integer"/>
+	<field name="child1_code" class="java.lang.String"/>
+	<field name="child1_name" class="java.lang.String"/>
+	<field name="char1_child1_code" class="java.lang.String"/>
+	<field name="child1_parent_id" class="java.lang.Integer"/>
+	<field name="child2_id" class="java.lang.Integer"/>
+	<field name="child2_code" class="java.lang.String"/>
+	<field name="child2_name" class="java.lang.String"/>
+	<field name="char1_child2_code" class="java.lang.String"/>
+	<field name="child2_parent_id" class="java.lang.Integer"/>
+	<field name="child3_id" class="java.lang.Integer"/>
+	<field name="child3_code" class="java.lang.String"/>
+	<field name="child3_name" class="java.lang.String"/>
+	<field name="char1_child3_code" class="java.lang.String"/>
+	<field name="child3_parent_id" class="java.lang.Integer"/>
+	<field name="current_month" class="java.math.BigDecimal"/>
+	<field name="prev_month" class="java.math.BigDecimal"/>
+	<variable name="current_month_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Parent" calculation="Sum">
+		<variableExpression><![CDATA[$F{current_month}]]></variableExpression>
+	</variable>
+	<variable name="prev_month_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Parent" calculation="Sum">
+		<variableExpression><![CDATA[$F{prev_month}]]></variableExpression>
+	</variable>
+	<variable name="current_month_2" class="java.math.BigDecimal" resetType="Group" resetGroup="Child1" calculation="Sum">
+		<variableExpression><![CDATA[$F{current_month}]]></variableExpression>
+	</variable>
+	<variable name="prev_month_2" class="java.math.BigDecimal" resetType="Group" resetGroup="Child1" calculation="Sum">
+		<variableExpression><![CDATA[$F{prev_month}]]></variableExpression>
+	</variable>
+	<variable name="current_month_3" class="java.math.BigDecimal" resetType="Group" resetGroup="Child2" calculation="Sum">
+		<variableExpression><![CDATA[$F{current_month}]]></variableExpression>
+	</variable>
+	<variable name="prev_month_3" class="java.math.BigDecimal" resetType="Group" resetGroup="Child2" calculation="Sum">
+		<variableExpression><![CDATA[$F{prev_month}]]></variableExpression>
+	</variable>
+	<variable name="current_month_4" class="java.math.BigDecimal" resetType="Group" resetGroup="Child3" calculation="Sum">
+		<variableExpression><![CDATA[$F{current_month}]]></variableExpression>
+	</variable>
+	<variable name="prev_month_4" class="java.math.BigDecimal" resetType="Group" resetGroup="Child3" calculation="Sum">
+		<variableExpression><![CDATA[$F{prev_month}]]></variableExpression>
+	</variable>
+	<variable name="akumulasi_1" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{current_month_1}.add($V{prev_month_1})]]></variableExpression>
+	</variable>
+	<variable name="akumulasi_2" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{current_month_2}.add($V{prev_month_2})]]></variableExpression>
+	</variable>
+	<variable name="akumulasi_3" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{current_month_3}.add($V{prev_month_3})]]></variableExpression>
+	</variable>
+	<variable name="akumulasi_4" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{current_month_4}.add($V{prev_month_4})]]></variableExpression>
+	</variable>
+	<group name="Parent">
+		<groupExpression><![CDATA[$F{parent_id}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="94829e1b-91e7-4fb2-9784-86534d641625" positionType="Float" stretchType="RelativeToTallestObject" x="70" y="0" width="732" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{char1_parent_code}.equalsIgnoreCase("1") || $F{char1_parent_code}.equalsIgnoreCase("2") || $F{char1_parent_code}.equalsIgnoreCase("3")) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{char1_parent_code}.equalsIgnoreCase("4") || $F{char1_parent_code}.equalsIgnoreCase("5") || $F{char1_parent_code}.equalsIgnoreCase("6") || $F{char1_parent_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{parent_name} ? $F{parent_name} : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="22fffd51-c84e-4d09-ae76-3e095ce0d0e8" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{char1_parent_code}.equalsIgnoreCase("1") || $F{char1_parent_code}.equalsIgnoreCase("2") || $F{char1_parent_code}.equalsIgnoreCase("3")) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{char1_parent_code}.equalsIgnoreCase("4") || $F{char1_parent_code}.equalsIgnoreCase("5") || $F{char1_parent_code}.equalsIgnoreCase("6") || $F{char1_parent_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{parent_code} ? $F{parent_code} : null)]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="18">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Parent" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="75096849-9dcf-44ad-aed8-902c55030fe6" positionType="Float" stretchType="RelativeToTallestObject" x="357" y="0" width="145" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{char1_parent_code}.equalsIgnoreCase("1") || $F{char1_parent_code}.equalsIgnoreCase("2") || $F{char1_parent_code}.equalsIgnoreCase("3")) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{char1_parent_code}.equalsIgnoreCase("4") || $F{char1_parent_code}.equalsIgnoreCase("5") || $F{char1_parent_code}.equalsIgnoreCase("6") || $F{char1_parent_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineStyle="Double"/>
+						<topPen lineStyle="Double"/>
+						<leftPen lineStyle="Double"/>
+						<bottomPen lineWidth="0.75" lineStyle="Double"/>
+						<rightPen lineStyle="Double"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{current_month_1} ? $V{current_month_1} : 0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Parent" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="acd231d5-6e34-4fee-9409-03bb7849cbb1" positionType="Float" stretchType="RelativeToTallestObject" x="502" y="0" width="145" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{char1_parent_code}.equalsIgnoreCase("1") || $F{char1_parent_code}.equalsIgnoreCase("2") || $F{char1_parent_code}.equalsIgnoreCase("3")) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{char1_parent_code}.equalsIgnoreCase("4") || $F{char1_parent_code}.equalsIgnoreCase("5") || $F{char1_parent_code}.equalsIgnoreCase("6") || $F{char1_parent_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineStyle="Double"/>
+						<topPen lineStyle="Double"/>
+						<leftPen lineStyle="Double"/>
+						<bottomPen lineWidth="0.75" lineStyle="Double"/>
+						<rightPen lineStyle="Double"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{prev_month_1} ? $V{prev_month_1} : 0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="166ea6b8-e319-4c32-b9ab-79cf1bd748a8" positionType="Float" stretchType="RelativeToTallestObject" x="647" y="0" width="155" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( $P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details") ) &&
+( $F{char1_parent_code}.equalsIgnoreCase("4") || $F{char1_parent_code}.equalsIgnoreCase("5") || $F{char1_parent_code}.equalsIgnoreCase("6") || $F{char1_parent_code}.equalsIgnoreCase("7") )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineStyle="Double"/>
+						<topPen lineStyle="Double"/>
+						<leftPen lineStyle="Double"/>
+						<bottomPen lineWidth="0.75" lineStyle="Double"/>
+						<rightPen lineStyle="Double"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{akumulasi_1} ? $V{akumulasi_1} : 0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="292f9d56-0e19-4a9b-9521-730fc314ffe9" positionType="Float" stretchType="RelativeToTallestObject" x="70" y="0" width="287" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{char1_parent_code}.equalsIgnoreCase("1") || $F{char1_parent_code}.equalsIgnoreCase("2") || $F{char1_parent_code}.equalsIgnoreCase("3")) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{char1_parent_code}.equalsIgnoreCase("4") || $F{char1_parent_code}.equalsIgnoreCase("5") || $F{char1_parent_code}.equalsIgnoreCase("6") || $F{char1_parent_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineStyle="Double"/>
+						<topPen lineStyle="Double"/>
+						<leftPen lineStyle="Double"/>
+						<bottomPen lineWidth="0.75" lineStyle="Double"/>
+						<rightPen lineStyle="Double"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{parent_name} ? "JUMLAH " + $F{parent_name} : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="43e8ab77-1b2f-4686-924b-619d58b10ff0" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{char1_parent_code}.equalsIgnoreCase("1") || $F{char1_parent_code}.equalsIgnoreCase("2") || $F{char1_parent_code}.equalsIgnoreCase("3")) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{char1_parent_code}.equalsIgnoreCase("4") || $F{char1_parent_code}.equalsIgnoreCase("5") || $F{char1_parent_code}.equalsIgnoreCase("6") || $F{char1_parent_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Child1">
+		<groupExpression><![CDATA[$F{child1_id}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="76c49139-e755-4779-904e-fa2840883ced" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("1") || $F{char1_child1_code}.equalsIgnoreCase("2") || $F{char1_child1_code}.equalsIgnoreCase("3")) && ($F{child1_code} != $F{parent_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("4") || $F{char1_child1_code}.equalsIgnoreCase("5") || $F{char1_child1_code}.equalsIgnoreCase("6") || $F{char1_child1_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{child1_code} ? $F{child1_code} : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="b09b1b72-27d1-456b-86d5-8cc30524f063" positionType="Float" stretchType="RelativeToTallestObject" x="70" y="0" width="732" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("1") || $F{char1_child1_code}.equalsIgnoreCase("2") || $F{char1_child1_code}.equalsIgnoreCase("3")) && ($F{child1_code} != $F{parent_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("4") || $F{char1_child1_code}.equalsIgnoreCase("5") || $F{char1_child1_code}.equalsIgnoreCase("6") || $F{char1_child1_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{child1_name} ? $F{child1_name} : null)]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="18">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Child1" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="a5c5a0d9-5b40-42dc-aa23-90fcec5e22a1" positionType="Float" stretchType="RelativeToTallestObject" x="357" y="0" width="145" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("1") || $F{char1_child1_code}.equalsIgnoreCase("2") || $F{char1_child1_code}.equalsIgnoreCase("3")) && ($F{child1_code} != $F{parent_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("4") || $F{char1_child1_code}.equalsIgnoreCase("5") || $F{char1_child1_code}.equalsIgnoreCase("6") || $F{char1_child1_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{current_month_2} ? $V{current_month_2} : 0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Child1" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="71f53f3b-d969-4f1e-8bae-dfba6c91ceea" positionType="Float" stretchType="RelativeToTallestObject" x="502" y="0" width="145" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("1") || $F{char1_child1_code}.equalsIgnoreCase("2") || $F{char1_child1_code}.equalsIgnoreCase("3")) && ($F{child1_code} != $F{parent_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("4") || $F{char1_child1_code}.equalsIgnoreCase("5") || $F{char1_child1_code}.equalsIgnoreCase("6") || $F{char1_child1_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{prev_month_2} ? $V{prev_month_2} : 0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="ff064c6d-cf7a-4de4-a03e-306a62957050" positionType="Float" stretchType="RelativeToTallestObject" x="647" y="0" width="155" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( $P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details") ) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) &&
+( $F{char1_child1_code}.equalsIgnoreCase("4") || $F{char1_child1_code}.equalsIgnoreCase("5") || $F{char1_child1_code}.equalsIgnoreCase("6") || $F{char1_child1_code}.equalsIgnoreCase("7") )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{akumulasi_2} ? $V{akumulasi_2} : 0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="841793b3-448c-48da-975c-1cdd0a350765" positionType="Float" stretchType="RelativeToTallestObject" x="70" y="0" width="287" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("1") || $F{char1_child1_code}.equalsIgnoreCase("2") || $F{char1_child1_code}.equalsIgnoreCase("3")) && ($F{child1_code} != $F{parent_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("4") || $F{char1_child1_code}.equalsIgnoreCase("5") || $F{char1_child1_code}.equalsIgnoreCase("6") || $F{char1_child1_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{child1_name} ? $F{child1_name} : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="00905ca3-aee2-4cb1-9aea-f7d73daa2fba" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("1") || $F{char1_child1_code}.equalsIgnoreCase("2") || $F{char1_child1_code}.equalsIgnoreCase("3")) && ($F{child1_code} != $F{parent_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child1_parent_id} != 0 && $F{child1_parent_id} != null) && ($F{char1_child1_code}.equalsIgnoreCase("4") || $F{char1_child1_code}.equalsIgnoreCase("5") || $F{char1_child1_code}.equalsIgnoreCase("6") || $F{char1_child1_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{child1_code} ? $F{child1_code} : null)]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Child2">
+		<groupExpression><![CDATA[$F{child2_id}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="bbde4403-a07e-4cce-83ba-dbce522f1181" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child2_parent_id} != 0 && $F{child2_parent_id} != null) && ($F{char1_child2_code}.equalsIgnoreCase("1") || $F{char1_child2_code}.equalsIgnoreCase("2") || $F{char1_child2_code}.equalsIgnoreCase("3")) && ($F{child2_code} != $F{child1_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child2_parent_id} != 0 && $F{child2_parent_id} != null) && ($F{char1_child2_code}.equalsIgnoreCase("4") || $F{char1_child2_code}.equalsIgnoreCase("5") || $F{char1_child2_code}.equalsIgnoreCase("6") || $F{char1_child2_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{child2_code} ? $F{child2_code} : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="a131437e-b10b-41dc-b716-430086f722e9" positionType="Float" stretchType="RelativeToTallestObject" x="70" y="0" width="287" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child2_parent_id} != 0 && $F{child2_parent_id} != null) && ($F{char1_child2_code}.equalsIgnoreCase("1") || $F{char1_child2_code}.equalsIgnoreCase("2") || $F{char1_child2_code}.equalsIgnoreCase("3")) && ($F{child2_code} != $F{child1_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child2_parent_id} != 0 && $F{child2_parent_id} != null) && ($F{char1_child2_code}.equalsIgnoreCase("4") || $F{char1_child2_code}.equalsIgnoreCase("5") || $F{char1_child2_code}.equalsIgnoreCase("6") || $F{char1_child2_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{child2_name} ? $F{child2_name} : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Child2" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="4ed74003-6e09-4dcb-baad-5f7e168ff564" positionType="Float" stretchType="RelativeToTallestObject" x="357" y="0" width="145" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child2_parent_id} != 0 && $F{child2_parent_id} != null) && ($F{char1_child2_code}.equalsIgnoreCase("1") || $F{char1_child2_code}.equalsIgnoreCase("2") || $F{char1_child2_code}.equalsIgnoreCase("3")) && ($F{child2_code} != $F{child1_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child2_parent_id} != 0 && $F{child2_parent_id} != null) && ($F{char1_child2_code}.equalsIgnoreCase("4") || $F{char1_child2_code}.equalsIgnoreCase("5") || $F{char1_child2_code}.equalsIgnoreCase("6") || $F{char1_child2_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{current_month_3} ? $V{current_month_3} : 0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Child2" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="b60ffab1-5627-41eb-a8cc-26adc85cabde" positionType="Float" stretchType="RelativeToTallestObject" x="502" y="0" width="145" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child2_parent_id} != 0 && $F{child2_parent_id} != null) && ($F{char1_child2_code}.equalsIgnoreCase("1") || $F{char1_child2_code}.equalsIgnoreCase("2") || $F{char1_child2_code}.equalsIgnoreCase("3")) && ($F{child2_code} != $F{child1_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child2_parent_id} != 0 && $F{child2_parent_id} != null) && ($F{char1_child2_code}.equalsIgnoreCase("4") || $F{char1_child2_code}.equalsIgnoreCase("5") || $F{char1_child2_code}.equalsIgnoreCase("6") || $F{char1_child2_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{prev_month_3} ? $V{prev_month_3} : 0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="08d5462a-157c-47d6-8300-fcccd27bf809" positionType="Float" stretchType="RelativeToTallestObject" x="647" y="0" width="155" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( $P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details") ) && ($F{child2_parent_id} != 0 && $F{child2_parent_id} != null) &&
+( $F{char1_child2_code}.equalsIgnoreCase("4") || $F{char1_child2_code}.equalsIgnoreCase("5") || $F{char1_child2_code}.equalsIgnoreCase("6") || $F{char1_child2_code}.equalsIgnoreCase("7") )]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{akumulasi_3} ? $V{akumulasi_3} : 0)]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Child3">
+		<groupExpression><![CDATA[$F{child3_id}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="99ece882-bbe1-4cc9-b438-ea54ec2d85c6" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child3_parent_id} != 0 && $F{child3_parent_id} != null) && ($F{char1_child3_code}.equalsIgnoreCase("1") || $F{char1_child3_code}.equalsIgnoreCase("2") || $F{char1_child3_code}.equalsIgnoreCase("3")) && ($F{child3_code} != $F{child2_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child3_parent_id} != 0 && $F{child3_parent_id} != null) && ($F{char1_child3_code}.equalsIgnoreCase("4") || $F{char1_child3_code}.equalsIgnoreCase("5") || $F{char1_child3_code}.equalsIgnoreCase("6") || $F{char1_child3_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{child3_code} ? $F{child3_code} : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="1dd497aa-ca6a-43e6-8eec-e27a77ead7f5" positionType="Float" stretchType="RelativeToTallestObject" x="70" y="0" width="287" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child3_parent_id} != 0 && $F{child3_parent_id} != null) && ($F{char1_child3_code}.equalsIgnoreCase("1") || $F{char1_child3_code}.equalsIgnoreCase("2") || $F{char1_child3_code}.equalsIgnoreCase("3")) && ($F{child3_code} != $F{child2_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child3_parent_id} != 0 && $F{child3_parent_id} != null) && ($F{char1_child3_code}.equalsIgnoreCase("4") || $F{char1_child3_code}.equalsIgnoreCase("5") || $F{char1_child3_code}.equalsIgnoreCase("6") || $F{char1_child3_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{child3_name} ? $F{child3_name} : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Child3" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="b29cb4f4-b03b-4b17-8561-f6ec98fd1d22" positionType="Float" stretchType="RelativeToTallestObject" x="357" y="0" width="145" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child3_parent_id} != 0 && $F{child3_parent_id} != null) && ($F{char1_child3_code}.equalsIgnoreCase("1") || $F{char1_child3_code}.equalsIgnoreCase("2") || $F{char1_child3_code}.equalsIgnoreCase("3")) && ($F{child3_code} != $F{child2_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child3_parent_id} != 0 && $F{child3_parent_id} != null) && ($F{char1_child3_code}.equalsIgnoreCase("4") || $F{char1_child3_code}.equalsIgnoreCase("5") || $F{char1_child3_code}.equalsIgnoreCase("6") || $F{char1_child3_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{current_month_4} ? $V{current_month_4} : 0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Child3" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="8129bee5-a960-487c-82b2-d24cc0f4348f" positionType="Float" stretchType="RelativeToTallestObject" x="502" y="0" width="145" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( ($P{code}.equalsIgnoreCase("balance_sheet") || $P{code}.equalsIgnoreCase("balance_sheet_details")) && ($F{child3_parent_id} != 0 && $F{child3_parent_id} != null) && ($F{char1_child3_code}.equalsIgnoreCase("1") || $F{char1_child3_code}.equalsIgnoreCase("2") || $F{char1_child3_code}.equalsIgnoreCase("3")) && ($F{child3_code} != $F{child2_code}) ) ||
+( ($P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")) && ($F{child3_parent_id} != 0 && $F{child3_parent_id} != null) && ($F{char1_child3_code}.equalsIgnoreCase("4") || $F{char1_child3_code}.equalsIgnoreCase("5") || $F{char1_child3_code}.equalsIgnoreCase("6") || $F{char1_child3_code}.equalsIgnoreCase("7")) )]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{prev_month_4} ? $V{prev_month_4} : 0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement uuid="e33007d2-e186-4992-b7b0-8dcdc314be23" positionType="Float" stretchType="RelativeToTallestObject" x="647" y="0" width="155" height="18" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[( $P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details") ) && ($F{child3_parent_id} != 0 && $F{child3_parent_id} != null) &&
+( $F{char1_child3_code}.equalsIgnoreCase("4") || $F{char1_child3_code}.equalsIgnoreCase("5") || $F{char1_child3_code}.equalsIgnoreCase("6") || $F{char1_child3_code}.equalsIgnoreCase("7") )]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{akumulasi_4} ? $V{akumulasi_4} : 0)]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="6fed99c2-6caf-4cec-82df-b7b44563d6d4" positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="0" y="0" width="357" height="20" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
+				<reportElement uuid="ae6718eb-13f8-4d91-8fae-5750af935426" positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="357" y="0" width="30" height="20" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PER "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
+				<reportElement uuid="4aeaefcd-fb18-40c9-adea-37db0e01c021" positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="687" y="0" width="115" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{current_month}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
+				<reportElement uuid="e3feb7e6-f23d-4995-8017-7f258d0e7b46" positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="387" y="0" width="115" height="20" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{current_month}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
+				<reportElement uuid="19baf896-0b2e-49e9-9818-df2e93106965" positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="532" y="0" width="115" height="20" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{prev_month}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
+				<reportElement uuid="7e56df01-b4f5-47f5-84ed-1491c6ef46fd" positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="502" y="0" width="30" height="20" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PER "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
+				<reportElement uuid="cc7254b9-5daf-4acd-b7c1-85f96468e974" positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="647" y="0" width="40" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{code}.equalsIgnoreCase("profit_loss") || $P{code}.equalsIgnoreCase("profit_loss_details")]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["AKUM SD "]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+</jasperReport>

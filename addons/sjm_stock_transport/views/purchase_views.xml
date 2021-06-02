@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sjm2_purchase_order_from_view" model="ir.ui.view">
+            <field name="name">sjm2.purchase.order.tree.view</field>
+            <field name="model">purchase.order</field>
+            <field name="priority">19</field>
+            <field name="inherit_id" ref="c10i_purchase.purchase_order_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="incoterm_id" position="after">
+                    <field name="transport_invoice_id" invisible="1"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

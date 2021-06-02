@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record id="create_generate_report_sale_order" model="ir.ui.view">
+	        <field name="name">generate.report.sale.order.form</field>
+	        <field name="model">generate.report.sale.order</field>
+	        <field name="type">form</field>
+				<field name="arch" type="xml">
+	        	<form string="Report Penjualan">
+	        		<sheet>
+		            <separator string="Report Penjualan"/>
+		            <group>
+						<field name="type_report" required="1"/>
+						<field name="start_date"/>
+	            	 	<field name="end_date"/>
+	            	 	<field name="product_id" required="True" options="{'no_create': True}"/>
+			        </group>
+		            </sheet>
+		            <footer>
+		            <button name="generatereport" string="Generate Report" type="object" class="oe_highlight"/>
+		            </footer>
+	        	</form>
+	        </field>
+	     </record>
+
+
+		<record model="ir.actions.act_window" id="action_generate_report_sale_order">
+			<field name="name">Generate Report Sales Order</field>
+			<field name="res_model">generate.report.sale.order</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+			<field name="view_id" ref="create_generate_report_sale_order"/>
+		</record>
+
+
+
+         <menuitem name="Generate Report Sale Order" parent="sales_team.menu_sale_report" action="action_generate_report_sale_order" id="menu_generate_report_sale_order" icon="fa-print" sequence="4"/>
+	</data>
+</odoo>

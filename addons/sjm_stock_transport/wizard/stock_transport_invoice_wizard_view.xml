@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+    <record id="stock_transport_invoice_wizard_form_view" model="ir.ui.view">
+		<field name="name">Create Accrual Transport</field>
+		<field name="model">stock.transport.invoice.wizard</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+	        <form string="Create Invoice Transport">
+	        	<group>
+	        		<field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
+	                <field name="product_id" options="{'no_open': True, 'no_create': True}"/>
+	                <field name="journal_id" options="{'no_open': True, 'no_create': True}"/>
+	                <field name="expense_account_id" options="{'no_open': True, 'no_create': True}"/>
+	        	</group>
+	        	<group>
+	   				<label for="start_date" string="Tanggal"/>
+                        <div >
+                            <field name="date_start" class="oe_inline" placeholder="Start Date"/> - <field name="date_end" class="oe_inline" placeholder="End Date" />
+                        </div>
+	          	</group>
+                <footer>
+                    <button name="create_invoice" string="Create Invoice" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+	          	
+	        </form>
+    	</field>
+    </record>
+
+    <record id="action_stock_transport_invoice_wizard" model="ir.actions.act_window">
+		<field name="name">Create Invoice Transport</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">stock.transport.invoice.wizard</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="stock_transport_invoice_wizard_form_view"/>
+		<field name="target">new</field>
+    </record>
+
+	<menuitem id='stock_transport_invoice_wizard_menu' name="Create Invoice Transport" parent='sjm_stock_transport.menu_stock_transport_cost' action='action_stock_transport_invoice_wizard'/>  
+            
+	</data>
+</odoo>

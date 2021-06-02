@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="res_document_type_sjm_form_inherit">
+            <field name="name">res.document.type.sjm.form_inherit</field>
+            <field name="model">res.document.type</field>
+            <field name="inherit_id" ref="c10i_document_type.view_res_document_type_form"/>
+            <field name="arch" type="xml">
+                <field name="spk" position="after">
+                    <field name="transport"/>
+                </field>
+                <field name="company_id" position="after">
+                    <field name="header_report"/>
+                </field>
+            </field>
+        </record>
+    </data>
+
+    <data>
+        <record id="view_company_base_sjm_form" model="ir.ui.view">
+            <field name="name">view.company.base.sjm.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="before">
+                    <field name="head_office_transport_id" domain="[('is_company','=', True)]"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,196 @@
+
+/* Copyright 2016 LasLabs Inc.
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+header {
+  margin: 0;
+  padding: 0;
+}
+@media print {
+  header {
+    display: none;
+  }
+}
+header > .main-nav {
+  display: block;
+  white-space: nowrap;
+}
+header > .main-nav .navbar-systray {
+  white-space: nowrap;
+}
+@media (max-width: 767px) {
+  header > .main-nav .navbar-systray {
+    position: absolute;
+    top: 0;
+    right: 56px;
+  }
+}
+header > .main-nav .navbar-systray > .oe_user_menu_placeholder > li > a > .oe_topbar_avatar {
+  border-radius: 50%;
+  margin-top: -8px;
+  max-height: 36px;
+  height: 36px;
+  width: 36px;
+}
+header > .main-nav .navbar-systray > .oe_user_menu_placeholder > li > a .oe_topbar_name {
+  position: relative;
+  top: -3px;
+}
+@media (max-width: 767px) {
+  header > .main-nav .navbar-systray > .oe_user_menu_placeholder > li > a .oe_topbar_name {
+    display: none;
+  }
+}
+header > .main-nav .navbar-systray > .oe_user_menu_placeholder > li > a .caret {
+  position: relative;
+  top: -3.5px;
+}
+@media (max-width: 767px) {
+  header > .main-nav .navbar-systray .o_switch_company_menu .oe_topbar_name {
+    display: none;
+  }
+}
+header > .main-nav .navbar-systray > .oe_systray > li > a .fa {
+  position: relative;
+  top: 3px;
+  font-size: 16px;
+}
+header > .main-nav .navbar-systray > .oe_systray > li > a .caret {
+  position: relative;
+  top: 0.5px;
+}
+header > .main-nav .navbar-right {
+  float: right;
+}
+header > .main-nav .navbar-right > li {
+  float: left;
+}
+@media (max-width: 767px) {
+  header > .main-nav .navbar-right .navbar-nav .open .dropdown-menu {
+    position: fixed;
+    top: 46px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    float: left;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  }
+}
+header > .main-nav .container-fluid:before,
+header > .main-nav .container-fluid:after,
+header > .main-nav .navbar-collapse:before,
+header > .main-nav .navbar-collapse:after {
+  display: inline;
+}
+header > .main-nav > .container-fluid {
+  margin: 0;
+  padding: 0;
+}
+@media (max-width: 767px) {
+  header > .main-nav > .container-fluid > .navbar-collapse {
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+  }
+  header > .main-nav > .container-fluid > .navbar-collapse.collapsing {
+    overflow: hidden;
+  }
+}
+header > .main-nav > .container-fluid > .navbar-header {
+  margin: 0;
+  padding: 0;
+}
+header > .main-nav > .container-fluid > .navbar-header > .drawer-toggle,
+header > .main-nav > .container-fluid > .navbar-header .navbar-toggle {
+  margin: 0;
+  padding: 0;
+  border: 0px;
+  border-radius: 0px;
+}
+header > .main-nav > .container-fluid > .navbar-header > .drawer-toggle > i.fa,
+header > .main-nav > .container-fluid > .navbar-header .navbar-toggle > i.fa,
+header > .main-nav > .container-fluid > .navbar-header > .drawer-toggle div.fa,
+header > .main-nav > .container-fluid > .navbar-header .navbar-toggle div.fa {
+  padding: 17px 14px 16px;
+}
+header > .main-nav > .container-fluid .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu {
+  margin: 0;
+  padding: 0;
+}
+header > .main-nav > .container-fluid .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu ul.dropdown-menu > li.dropdown-header {
+  color: white;
+  text-decoration: none;
+  background-color: #a8a8a8;
+  font-weight: bold;
+}
+@media (min-width: 768px) {
+  header > .main-nav > .container-fluid .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu {
+    height: 46px;
+  }
+}
+header > .main-nav > .container-fluid .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu > li {
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  header > .main-nav > .container-fluid .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu > li {
+    height: 46px;
+  }
+}
+header > .main-nav > .container-fluid .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu > li.app-name {
+  display: block;
+  padding: 7px 8px;
+}
+header > .main-nav > .container-fluid .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu > li.app-name > .oe_menu_text {
+  font-size: 20px;
+}
+@media (min-width: 768px) {
+  header > .main-nav > .container-fluid .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu > li.app-name {
+    padding: 8.5px 12px;
+  }
+}
+header > .main-nav > .container-fluid .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu > li > a {
+  margin: 0;
+}
+@media (min-width: 768px) {
+  header > .main-nav > .container-fluid .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu > li > a {
+    height: 46px;
+    padding: 14px 8px;
+  }
+}
+header > .main-nav > .navbar-right.o_menu_systray {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+header > .main-nav > .navbar-right.o_menu_systray > ul {
+  margin: 0;
+  padding: 0;
+}
+header > .main-nav > .navbar-right.o_menu_systray > ul > li > a {
+  margin: 0;
+  padding: 13px 8px;
+  height: 46px;
+}
+header > .main-nav .badge {
+  position: absolute;
+  top: 3px;
+  right: 7.5px;
+}
+header > .main-nav ul.nav > li > a {
+  padding: 7px 7.5px;
+}
+header > .main-nav .o_planner_systray > .progress {
+  margin-top: 15px;
+}
+@media (min-width: 768px) {
+  a.navbar-collapse.collapse {
+    padding-bottom: 7px;
+    padding-top: 7px;
+  }
+}
+.dropdown-scrollable {
+  overflow-x: hidden;
+}

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="wizard_report_outstanding_invoice_form_view" model="ir.ui.view">
+            <field name="name">wizard.report.outstanding.invoice.form.view</field>
+            <field name="model">wizard.report.outstanding.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Outstanding Invoice Report">
+                    <group>
+                        <group>
+                            <field name="date_to"/>
+                            <field name="invoice_type"/>
+                        </group>
+                        <group>
+                            <field name="product_id" options="{'no_create':True, 'no_open':True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="print_excel_report" string="Export" type="object" class="oe_highlight"/> or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+	    <record id="action_wizard_report_outstanding_invoice" model="ir.actions.act_window">
+			<field name="name">Outstanding Invoice per Product</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">wizard.report.outstanding.invoice</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="wizard_report_outstanding_invoice_form_view"/>
+			<field name="target">new</field>
+	    </record>
+
+		<menuitem id="menu_wizard_report_outstanding_invoice" action="action_wizard_report_outstanding_invoice" parent="account.menu_finance_reports" sequence="106"/>
+    </data>
+</odoo>

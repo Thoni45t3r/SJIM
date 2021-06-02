@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record id="create_generate_report_purchase_order" model="ir.ui.view">
+	        <field name="name">wizard.generate.report.purchase.order.form</field>
+	        <field name="model">wizard.generate.report.purchase.order</field>
+	        <field name="type">form</field>
+				<field name="arch" type="xml">
+	        	<form string="Report Pembelian">
+	        		<sheet>
+		            <separator string="Report Pembelian"/>
+		            <group>
+						
+						<field name="type_report" required="1"/>
+						<field name="start_date"/>
+	            	 	<field name="end_date"/>
+	            	 	<field name="product_id" required="True" options="{'no_create': True}"/>
+			          
+			        </group>
+		            </sheet>
+		            <footer>
+		            <button name="generatereport" string="Generate Report" type="object" class="oe_highlight"/>
+		            </footer>
+	        	</form>
+	        </field>
+	     </record>
+
+
+		<record model="ir.actions.act_window" id="action_generate_report_purchase_order">
+			<field name="name">Generate Report Purchase Order</field>
+			<field name="res_model">wizard.generate.report.purchase.order</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+			<field name="view_id" ref="create_generate_report_purchase_order"/>
+		</record>
+
+
+
+         <menuitem name="Generate Report Purchase Order" parent="purchase.root_purchase_report" action="action_generate_report_purchase_order" id="menu_generate_report_purchase_order" icon="fa-print" sequence="3"/>
+	</data>
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <record id="c10i_base.login_form_background_default" model="ir.config_parameter">
+            <field name="key">login_form_background_default</field>
+            <field name="value">/sjm_base_lpg/static/src/img/background_perusahaan.jpg</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<report string  = "Request Payment Approval"
+	        model   = "account.payment.instruction"
+            auto    = "True"
+	        name    = "report_ins_request_approval"
+	        rml     = "sjim_account_payment_instruction/report/ins_request_approval.jrxml"
+	        id      = "report_ins_request_approval"
+	        menu    = "False" />
+	<report string  = "Payment Instruction"
+	        model   = "account.payment.instruction"
+            auto    = "True"
+	        name    = "report_ins_payment_instruction"
+	        rml     = "sjim_account_payment_instruction/report/ins_payment_instruction.jrxml"
+	        id      = "report_ins_payment_instruction"
+	        menu    = "False" />
+	<report string  = "Voucher Payment"
+	        model   = "account.payment.instruction"
+            auto    = "True"
+	        name    = "report_ins_voucher_payment"
+	        rml     = "sjim_account_payment_instruction/report/report_voucher_payment.jrxml"
+	        id      = "report_ins_voucher_payment"
+	        menu    = "False" />
+</odoo>

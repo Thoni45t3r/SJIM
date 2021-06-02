@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data> 
+
+		<record id="stock_transport_invoice_tree_view" model="ir.ui.view">
+            <field name="name">stock.transport.invoice.tree.view</field>
+            <field name="model">stock.transport.invoice</field>
+            <field name="arch" type="xml">
+                <tree string="Stock Transport Invoice">
+                	<field name="name"/>
+	                <field name="product_id"/>
+	                <field name="partner_id" />
+	                <field name="purchase_id" />
+	                <field name="date_start"/>
+	                <field name="date_end"/>
+	                <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="stock_transport_invoice_search" model="ir.ui.view">
+            <field name="name">stock.transport.invoice.search</field>
+            <field name="model">stock.transport.invoice</field>
+            <field name="arch" type="xml">
+                <search string="Search Data">
+                	<field name="name"/>
+	                <field name="product_id"/>
+	                <field name="partner_id" />
+	                <field name="purchase_id" />
+	                <field name="date_start"/>
+	                <field name="date_end"/>
+	                <field name="state"/>
+                </search>
+            </field>
+        </record>
+
+
+		<record model="ir.ui.view" id="stock_transport_invoice_form_view">
+		    <field name="name">stock.transport.invoice.form</field>
+		    <field name="model">stock.transport.invoice</field>
+		    <field name="arch" type="xml">
+		        <form>
+		        	<header>
+		        		<button name="action_confirm" string="Confirm" states="draft" class="oe_highlight" type="object"/>
+		        		<button name="action_validate" string="Validate" states="confirmed" class="oe_highlight" type="object"/>
+		        		<button name="action_draft" string="Set to Draft" states="confirmed" type="object"/>
+		        		<field name="state" widget="statusbar" readonly="1"/>
+		        	</header>
+		        	<sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_view_spk"
+                                type="object" icon="fa-gear">
+                                <field string="SPK" name="spk_count" widget="statinfo" />
+                            </button>
+                            <button class="oe_stat_button" name="action_view_invoice"
+                                type="object" icon="fa-gear">
+                                <field string="Invoices" name="invoice_count" widget="statinfo" />
+                            </button>
+                        </div>
+						<div class="oe_title">
+							<h1><field name="name" required="1" readonly="1"/></h1>
+						</div>
+		             	<group>
+		             		<group string="Generate Data Filter">
+				             	<field name="date_start" attrs="{'readonly': [('state','!=','draft')], 'required': 1}"/>
+				                <field name="date_end" attrs="{'readonly': [('state','!=','draft')], 'required': 1}"/>
+				                <field name="partner_id" attrs="{'readonly': [('state','!=','draft')], 'required': 1}" options="{'no_edit': True, 'no_create': True}"/>
+				                <field name="product_id"  attrs="{'readonly': [('state','!=','draft')], 'required': 1}" options="{'no_edit': True, 'no_create': True}"/>
+				                <field name="partner_order_id" attrs="{'readonly': [('state','!=','draft')]}" options="{'no_edit': True, 'no_create': True}"/>
+	                 		</group>
+			            </group>
+			            <group  string="Invoicing Inputs">
+	                 		<group>
+				                <field name="journal_id" attrs="{'readonly': [('state','!=','draft')], 'required': [('line_ids', '!=', [])]}" options="{'no_edit': True, 'no_create': True}"/>
+	                 		</group>
+	                 		<group>
+	                 			<field name="taxes_ids" widget="many2many_tags" attrs="{'readonly': [('state','!=','draft')]}" options="{'no_edit': True, 'no_create': True}"/>
+	                 			<field name="doc_type_id" attrs="{'readonly': [('state','!=','draft')], 'required': [('line_ids', '!=', [])]}" options="{'no_edit': True, 'no_create': True}"/>
+	                 		</group>
+	                 	</group>
+	                 	<field name="summary_line_ids" readonly="1" attrs="{'invisible': [('summary_line_ids','=',[])]}">
+	                 		<tree>
+	                 			<field name="partner_id"/>
+	                 			<field name="relasi"/>
+	                 			<field name="product_qty" sum="product_qty"/>
+	                 		</tree>
+	                 	</field>
+		        		<button name="generate_data" string="Generate" class="oe_highlight" type="object" attrs="{'invisible': ['|', ('line_ids', '!=', []), ('state', '!=', 'draft')]}"/>
+                        <button name="delete_all_lines" string="⇒ Delete all lines" type="object" class="oe_link oe_right" attrs="{'invisible': ['|', ('line_ids', '=', []), ('state', '!=', 'draft')]}"/>
+                		<field name="line_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
+	                		<tree string="Data Lines" class="table_header_freeze" editable="bottom" delete="false" create="false">
+				                <field name="transport_proceed_to_invoice" />
+			                	<field name="date" readonly="1"/>
+				                <field name="product_id" readonly="1"/>
+				                <field name="src_location_id" readonly="1"/>
+				                <field name="dest_location_id" readonly="1"/>
+				                <field name="partner_id" readonly="1"/>
+				                <field name="no_plat" readonly="1"/>
+				                <field name="driver_name" readonly="1"/>
+				                <field name="src_netto" readonly="1"/>
+				                <field name="product_qty" readonly="1"/>
+				                <field name="difference_qty" readonly="1"/>
+				                <field name="price_unit" readonly="1"/>
+				                <field name="rate_type" readonly="1"/>
+				                <field name="wb_do" readonly="1"/>
+	                		</tree>
+	                		<form>
+	                			<group>
+		                			<field name="date"/>
+		                			<field name="src_location_id"/>
+		                			<field name="dest_location_id"/>
+					                <field name="asal"/>
+					                <field name="tujuan"/>
+					                <field name="partner_id"/>
+					                <field name="product_id"/>
+					                <field name="product_qty"/>
+					                <field name="rate_type"/>
+					                <field name="price_unit"/>	                				
+	                			</group>
+	                			<group>
+					                <field name="wb_do"/>
+					                <field name="state"/>
+					                <field name="generate_transport_id"/>
+					                <field name="timbang_metro_id"/>
+					                <field name="timbang_sampit_id"/>
+					                <field name="rekap_timbang_line_id"/>
+					                <field name="import_dharmala_line_id"/>	                				
+					                <field name="accrued"/>
+					                <field name="invoiced"/>
+					                <field name="purchase_id"/>
+	                			</group>
+	                		</form>
+	                	</field>
+		        	</sheet>
+		        </form>
+		    </field>
+		</record> 
+
+		<record model="ir.actions.act_window" id="action_stock_transport_invoice">
+		    <field name="name">Stock Transport Invoice</field>
+		    <field name="res_model">stock.transport.invoice</field>
+		    <field name="view_type">form</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+	
+		<menuitem id="action_transport_invoice" name="Create Invoice Transport" parent="sjm_stock_transport.menu_stock_transport_cost" action="action_stock_transport_invoice" sequence="4"/>
+
+	</data>
+</odoo>

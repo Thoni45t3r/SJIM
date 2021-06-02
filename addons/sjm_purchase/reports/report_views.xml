@@ -1,0 +1,126 @@
+<odoo>
+    <data>
+    	<!-- REPORT PURCHASE -->
+		<!-- <report string="REKAP PURCHASE ORDER"
+            model="wizard.purchase.report"
+            auto="True"
+            name="report_purchase_report_rekap"
+            rml="sjm_purchase/reports/report_purchase_report_rekap.jrxml"
+            id="report_purchase_report_rekap"
+            menu="False"
+            />
+        <report string="REKAP PURCHASE ORDER XLSX"
+            model="wizard.purchase.report"
+            auto="True"
+            name="report_purchase_report_rekap_xlsx"
+            rml="sjm_purchase/reports/report_purchase_report_rekap_xlsx.jrxml"
+            id="report_purchase_report_rekap_xlsx"
+            menu="False"
+            /> -->
+        <report string="REKAP PURCHASE ORDER XLSX"
+            model="wizard.purchase.report"
+            auto="True"
+            report_type="xlsx"
+            name="report_purchase_report_rekap_xlsx2"
+            id="report_purchase_report_rekap_xlsx2"
+            menu="False"
+            />
+
+        <!-- <report string="REKAP PURCHASE ORDER DAN SPB"
+            model="wizard.purchase.report"
+            auto="True"
+            name="report_purchase_report_rekap_spb"
+            rml="sjm_purchase/reports/report_purchase_report_rekap_spb.jrxml"
+            id="report_purchase_report_rekap_spb"
+            menu="False"
+            />
+        <report string="REKAP PURCHASE ORDER DAN SPB XLSX"
+            model="wizard.purchase.report"
+            auto="True"
+            name="report_purchase_report_rekap_spb_xlsx"
+            rml="sjm_purchase/reports/report_purchase_report_rekap_spb_xlsx.jrxml"
+            id="report_purchase_report_rekap_spb_xlsx"
+            menu="False"
+            /> -->
+        <report string="REKAP PURCHASE ORDER DAN SPB XLSX"
+            model="wizard.purchase.report"
+            auto="True"
+            report_type="xlsx"
+            name="report_purchase_report_rekap_spb_xlsx2"
+            id="report_purchase_report_rekap_spb_xlsx2"
+            menu="False"
+            />
+
+        <!-- <report string="REKAP SPK"
+            model="wizard.purchase.report"
+            auto="True"
+            name="report_purchase_report_rekap_spk"
+            rml="sjm_purchase/reports/report_purchase_report_rekap_spk.jrxml"
+            id="report_purchase_report_rekap_spk"
+            menu="False"
+            />
+        <report string="REKAP SPK XLSX"
+            model="wizard.purchase.report"
+            auto="True"
+            name="report_purchase_report_rekap_spk_xlsx"
+            rml="sjm_purchase/reports/report_purchase_report_rekap_spk_xlsx.jrxml"
+            id="report_purchase_report_rekap_spk_xlsx"
+            menu="False"
+            /> -->
+        <report string="REKAP SPK XLSX"
+            model="wizard.purchase.report"
+            auto="True"
+            report_type="xlsx"
+            name="report_purchase_report_rekap_spk_xlsx2"
+            id="report_purchase_report_rekap_spk_xlsx2"
+            menu="False"
+            />
+
+        <report string="REKAP PEMBELIAN BARANG XLSX"
+            model="wizard.generate.report.purchase.order"
+            auto="True"
+            report_type="xlsx"
+            name="report_generate_rekap_pembelian_xls"
+            id="report_generate_rekap_pembelian_xls"
+            menu="False"
+            />
+
+        <report string="REKAP DETAIL PEMBELIAN BARANG XLSX"
+            model="wizard.generate.report.purchase.order"
+            auto="True"
+            report_type="xlsx"
+            name="report_generate_detail_pembelian_product_xls"
+            id="report_generate_detail_pembelian_product_xls"
+            menu="False"
+            />
+
+        <report string="RINCIAN PEMENUHAN PEMBELIAN BARANG XLSX"
+            model="wizard.generate.report.purchase.order"
+            auto="True"
+            report_type="xlsx"
+            name="report_generate_perincian_pemenuhan_pembelian_barang_xls"
+            id="report_generate_perincian_pemenuhan_pembelian_barang_xls"
+            menu="False"
+            />
+
+
+        <report string="Pending Purchase Order"
+                model="wizard.pending.purchase.order"
+                auto="True"
+                name="report_pending_po_sjm"
+                rml="sjm_purchase/reports/report_pending_po_sjm.jrxml"
+                id="report_pending_po_sjm"
+                menu="False"
+            />
+
+        <report string="Pending Purchase Order Excel"
+                model="wizard.pending.purchase.order"
+                auto="True"
+                name="report_pending_po_sjm_xls"
+                rml="sjm_purchase/reports/report_pending_po_sjm_xls.jrxml"
+                id="report_pending_po_sjm_xls"
+                menu="False"
+            />
+
+	</data>
+</odoo>

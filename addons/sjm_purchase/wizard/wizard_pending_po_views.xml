@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+		<record model="ir.ui.view" id="wizard_report_pending_purchase_order_sjm">
+			<field name="name">wizard.pending.purchase.order.form.sjm</field>
+			<field name="model">wizard.pending.purchase.order</field>
+			<field name="inherit_id" ref="c10i_purchase.wizard_report_pending_purchase_order"/>
+			<field name="arch" type="xml">
+
+				<!--add document_type_ids field xpath after to_date field -->
+				<xpath expr="//field[@name='to_date']" position="after">
+					<field name="document_type_ids" options="{'no_create_edit': True}" widget="many2many_tags"/>
+				</xpath>
+
+			</field>
+		</record>
+	</data>
+</odoo>

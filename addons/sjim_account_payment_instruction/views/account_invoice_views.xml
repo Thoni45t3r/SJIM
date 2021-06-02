@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="request_payment_invoice_supplier_form_inherit" model="ir.ui.view">
+            <field name="name">invoice.supplier.request.payment</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form" />
+            <field name="arch" type="xml">
+                <xpath expr="/form/header/button[@name='action_invoice_draft']" position="after">
+                    <button name="%(action_request_payment_from_invoice)d" type="action" string="Request Payment"
+                            states="open"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sjim_invoice_advance_supplier_form_inherit" model="ir.ui.view">
+            <field name="name">sjim.account.invoice.advance.supplier.form</field>
+            <field name="model">account.invoice.advance</field>
+            <field name="inherit_id" ref="c10i_account_invoice_advance.invoice_advance_supplier_form" />
+            <field name="arch" type="xml">
+                <xpath expr="/form/header/button[@name='action_invoice_draft']" position="after">
+                    <button name="%(action_request_payment_from_advance)d" type="action" string="Request Payment"
+                            states="open"/>
+                </xpath>
+                <field name="reference" position="after">
+                    <field name="purchase_id" options="{'no_create': True, 'no_open': True}" domain="[('state','not in',['draft','cancel']), ('partner_id','=',partner_id)]"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="calendar.mail_menu_calendar" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6,0,[ref('hr.group_hr_user'),ref('hr.group_hr_manager')])]"/>
+        </record>
+        <record id="hr.menu_hr_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6,0,[ref('hr.group_hr_user'),ref('hr.group_hr_manager')])]"/>
+        </record>
+        <record id="hr_holidays.menu_hr_holidays_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6,0,[ref('hr.group_hr_user'),ref('hr.group_hr_manager')])]"/>
+        </record>
+    </data>
+    <data noupdate="1">
+        <record model="ir.module.category" id="module_category_accounting_head_office">
+            <field name="name">Accounting Head Office</field>
+            <field name="parent_id" ref="base.module_category_accounting_and_finance"/>
+            <field name="sequence">10</field>
+        </record>
+    </data>
+</odoo>

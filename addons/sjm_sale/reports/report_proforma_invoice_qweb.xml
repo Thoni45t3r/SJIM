@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_proforma_invoice_document">
+    <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+    <t t-set="company" t-value="o.company_id"/>
+    <div class="header col-xs-12">
+        <center style="font-size:20pt;"><span t-field="o.company_id"/></center>
+        <i>
+            <center><span t-field="company.street"/>,&#160;<span t-field="company.street2"/></center>
+            <center><span t-field="company.city"/>&#160;-&#160;<span t-field="company.state_id"/></center>
+        </i>
+        <div class="row zero_min_height">
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="page">
+        <div class="oe_structure"/>
+        <div class="col-xs-6">
+            <strong>Kepada:</strong>
+            <div t-if="o.partner_id">
+                <div t-field="o.partner_id"
+                    t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <center style="font-size:20pt;"><u>INVOICE</u></center>        
+            <center><span t-field="o.name"/></center>        
+        </div>
+        <div class="col-xs-6">
+            <h5>Kontrak No. :<span t-field="o.name"/></h5>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="text-center; border:1px solid black;">JENIS BARANG</th>
+                    <th style="text-center; border:1px solid black;">JUMLAH BARANG</th>
+                    <th style="text-center; border:1px solid black;">HARGA SATUAN</th>
+                    <th style="text-center; border:1px solid black;">JUMLAH HARGA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="o.invoice_line_ids" t-as="l">
+                    <tr>
+                        <td style="border:1px solid black;"><span t-field="l.product_id"/></td>
+                        <td style="text-right; border:1px solid black;"><span t-field="l.product_uom_qty"/></td>
+                        <td style="text-right; border:1px solid black;"><span t-field="l.price_unit"/></td>
+                        <td style="text-right; border:1px solid black;"><span t-field="l.price_subtotal"/></td>
+                    </tr>
+                </t>
+                <t t-if="o.amount_tax">
+                    <tr>
+                        <th style="border:1px solid black;" colspan="3"><i>Total Tanpa Pajak</i></th>
+                        <th style="text-right; border:1px solid black;"><i><span t-field="o.amount_untaxed"/></i></th>
+                    </tr>      
+                    <tr>
+                        <th style="border:1px solid black;" colspan="3"><i>Pajak</i></th>
+                        <th style="text-right; border:1px solid black;"><i><span t-field="o.amount_tax"/></i></th>
+                    </tr>      
+                    <tr>
+                        <th style="border:1px solid black;" colspan="3"><i>Total Tagihan</i></th>
+                        <th style="text-right; border:1px solid black;"><i><span t-field="o.amount_total"/></i></th>
+                    </tr>      
+                </t>
+                <t t-else="">
+                    <tr>
+                        <th style="border:1px solid black;" colspan="3"><i>Total Tagihan</i></th>
+                        <th style="text-right; border:1px solid black;"><i><span t-field="o.amount_total"/></i></th>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+        <div class="col-xs-12">
+            <h4>TERBILANG :</h4>
+            <h4><span t-esc="o.get_amount_total()"/></h4>
+        </div>
+        <div class="col-xs-6">
+            <t t-set="bank" t-value="o.partner_bank_id"/>
+            <h5>Mohon tagihan dapat ditransfer ke rekenig sebagai berikut:</h5>
+            <h5><span t-field="bank.bank_id"/></h5>
+            <h5>A.N&#160;<span t-field="bank.partner_id"/></h5>
+            <h5>AC.&#160;No.&#160;<span t-field="bank.acc_number"/></h5>
+        </div>
+        <div class="col-xs-12">
+            <div class="col-xs-6"/>
+            <div class="col-xs-6">
+                <h5><center><span t-field="company.city"/>,&#160;<span t-esc="datetime.datetime.strptime(o.date_invoice, '%Y-%m-%d').strftime('%d %b %Y')"/></center></h5>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <h5>
+                    <t t-if="o.sign_seller">
+                        <center><span t-field="o.sign_seller"/></center>
+                        <center><i><span t-field="o.sign_job_position"/></i></center>
+                    </t>
+                </h5>
+            </div>
+        </div>
+
+    </div>
+<!--         <div class="page">
+            <div class="row">
+
+                    <div t-if="not o.dest_address_id and o.picking_type_id and o.picking_type_id.warehouse_id">
+                        <span t-field="o.picking_type_id.warehouse_id.name"/>
+                        <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </div>
+                <div class="col-xs-5 col-xs-offset-1">
+                    <div t-field="o.partner_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                        <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
+                </div>
+            </div>
+
+            <h2 t-if="o.state != 'draft'">Purchase Order Confirmation #<span t-field="o.name"/></h2>
+            <h2 t-if="o.state == 'draft'">Request for Quotation #<span t-field="o.name"/></h2>
+
+            <div class="row mt32 mb32">
+                <div t-if="o.name" class="col-xs-3">
+                    <strong>Our Order Reference:</strong>
+                    <p t-field="o.name"/>
+                </div>
+                <div t-if="o.partner_ref" class="col-xs-3">
+                    <strong>Your Order Reference</strong>
+                    <p t-field="o.partner_ref"/>
+                </div>
+                <div t-if="o.date_order" class="col-xs-3">
+                    <strong>Order Date:</strong>
+                    <p t-field="o.date_order"/>
+                </div>
+            </div>
+
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th><strong>Description</strong></th>
+                        <th><strong>Taxes</strong></th>
+                        <th class="text-center"><strong>Date Req.</strong></th>
+                        <th class="text-right"><strong>Qty</strong></th>
+                        <th class="text-right"><strong>Unit Price</strong></th>
+                        <th class="text-right"><strong>Net Price</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="o.order_line" t-as="line">
+                        <td>
+                            <span t-field="line.name"/>
+                        </td>
+                        <td>
+                            <span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>
+                        </td>
+                        <td class="text-center">
+                            <span t-field="line.date_planned"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-field="line.product_qty"/>
+                            <span t-field="line.product_uom.name" groups="product.group_uom"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-field="line.price_unit"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-field="line.price_subtotal"
+                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-xs-4 pull-right">
+                    <table class="table table-condensed">
+                        <tr class="border-black">
+                            <td><strong>Total Without Taxes</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.amount_untaxed"
+                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Taxes</td>
+                            <td class="text-right">
+                                <span t-field="o.amount_tax"
+                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
+                        <tr class="border-black">
+                            <td><strong>Total</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.amount_total"
+                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <p t-field="o.notes"/>
+            <div class="oe_structure"/>
+        </div> -->
+</template>
+
+<template id="report_proforma_invoice_qweb">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="sjm_sale.report_proforma_invoice_document" t-lang="o.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

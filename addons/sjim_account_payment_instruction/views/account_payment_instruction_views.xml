@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_finance_payment_request" parent="c10i_account.menu_finance_payment_bank_cash" name="Payment Instruction" sequence="110"/>
+
+    <record id="view_account_payment_instruction_form" model="ir.ui.view">
+        <field name="name">view.account.payment.instruction.form</field>
+        <field name="model">account.payment.instruction</field>
+        <field name="arch" type="xml">
+            <form string="Payment Instructions" >
+                <header>
+                    <button name="print_request_approval" string="Print" type="object" class="oe_highlight" states="draft"/>
+                    <button name="print_instruction" string="Print" type="object" class="oe_highlight" states="confirm,done"/>
+                    <button name="print_voucher" string="Print Voucher" type="object" class="oe_highlight" states="confirm,done"/>
+                    <button name="confirm" string="Confirm" type="object" states="draft" />
+                    <button name="post" string="Validate" type="object" states="confirm" class="oe_highlight"/>
+                    <button name="set_draft" string="Reset to New" type="object" states="cancel" />
+                    <button name="cancel" string="Cancel" type="object" states="draft,confirm,done"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box" >
+                        <button class="oe_stat_button oe_highlight" name="%(action_payment_instruction_from_invoice)d"
+                            string="Add Invoice" type="action" states="draft" 
+                            attrs="{'invisible': [('state','!=','draft')]}" icon="fa-refresh"/>
+                        <button class="oe_stat_button oe_edit_only" name="button_outstanding"
+                            string="Payment Request" type="object" states="draft" 
+                            attrs="{'invisible': [('state','!=','draft')]}" icon="fa-refresh"/>
+                        <button class="oe_stat_button" name="button_request"
+                            string="Requests" type="object"
+                            attrs="{'invisible':['|',('state','=','draft'), ('request_ids','=',[])]}" icon="fa-bars"/>
+                        <button class="oe_stat_button" name="button_journal_entries"
+                            string="Journal Entries" type="object"
+                            states="done" icon="fa-bars"/>
+                        <!--<button class="oe_stat_button" name="button_payment"-->
+                            <!--string="Vendor Payments" type="object"-->
+                            <!--attrs="{'invisible':['|',('state','=','draft'), ('payment_ids','=',[])]}" icon="fa-bars"/>-->
+                        <!--<button class="oe_stat_button" name="button_voucher"-->
+                            <!--string="Direct Payments" type="object"-->
+                            <!--attrs="{'invisible':['|',('state','=','draft'), ('voucher_ids','=',[])]}" icon="fa-bars"/>-->
+                    </div>
+                    <div class="oe_title">
+                        <label string="Number" class="oe_edit_only"/>
+                        <h1><field name="name" required="1" readonly="1"/></h1>
+                    </div>
+                    <group name="main_info">
+                        <group>
+                            <field name="payment_date" />
+                            <field name="journal_id" domain="[('type','in',('bank','cash'))]"/>
+                            <field name="check_number" />
+                            <field name="check_date" />
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="amount" />
+                        </group>
+                    </group>
+                    <field name="request_ids" invisible="1"/>
+                    <field name="payment_ids" invisible="1"/>
+                    <field name="voucher_ids" invisible="1"/>
+                    <notebook>
+                        <page name="request_line" string="Request Lines">
+                            <field name="line_ids" >
+                                <tree editable="bottom" create="false">
+                                    <field name="user_id" readonly="1"/>
+                                    <field name="invoice_id" readonly="1"/>
+                                    <field name="invoice_advance_id" readonly="1"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="partner_id" readonly="1"/>
+                                    <field name="account_id" readonly="1"/>
+                                    <field name="amount" readonly="0"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_payment_instruction_tree" model="ir.ui.view">
+        <field name="name">view.account.payment.instruction.tree</field>
+        <field name="model">account.payment.instruction</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Instructions"  colors="red:state=='draft';grey:state=='done'">
+                <field name='name'/>
+                <field name='journal_id'/>
+                <field name='payment_date'/>
+                <field name='state'/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_payment_instruction_filter" model="ir.ui.view">
+        <field name="name">view.account.payment.instruction.filter</field>
+        <field name="model">account.payment.instruction</field>
+        <field name="arch" type="xml">
+            <search string="Payment Instructions">
+                <filter string="My Requests" domain="[('user_id','=',uid)]" name="my_payment_request_filter"/>
+                <field name="name" string="Search" filter_domain="[('name','ilike',self)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Requested By" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_payment_instruction" model="ir.actions.act_window">
+        <field name="name">Payment Instructions</field>
+        <field name="res_model">account.payment.instruction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_account_payment_instruction_filter"/>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Create to add a new Payment Instruction Entry
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_account_payment_instruction" parent="menu_finance_payment_request" action="action_account_payment_instruction" sequence="21"/>
+</odoo>

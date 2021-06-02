@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<record id="sjai_account_financial_report_form" model="ir.ui.view">
+            <field name="name">sjai.account.financial.report.form</field>
+            <field name="model">account.financial.report</field>
+            <field name="inherit_id" ref="account.view_account_financial_report_form"/>
+            <field name="arch" type="xml">
+                <field name="sign" position="before">
+                    <field name="report_balance_amount_type" attrs="{'invisible': [('parent_id','!=',False)]}"/>
+                </field>
+
+            </field>
+        </record>
+    </data>
+</odoo>

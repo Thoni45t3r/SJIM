@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data> 
+
+		<record id="stock_transport_import_tree_view" model="ir.ui.view">
+            <field name="name">stock.transport.import.tree.view</field>
+            <field name="model">stock.transport.import</field>
+            <field name="arch" type="xml">
+                <tree string="Transport import">
+                	<field name="date"/>
+	                <field name="file_name"/>
+	                <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_stock_transport_import_search" model="ir.ui.view">
+            <field name="name">stock.transport.import.search</field>
+            <field name="model">stock.transport.import</field>
+            <field name="arch" type="xml">
+                <search string="Search Data import">
+                    <field name="date"/>
+	                <field name="file_name"/>
+	                <field name="state"/>
+                </search>
+            </field>
+        </record>
+
+
+		<record model="ir.ui.view" id="stock_transport_import_form_view">
+		    <field name="name">stock.transport.import.form</field>
+		    <field name="model">stock.transport.import</field>
+		    <field name="arch" type="xml">
+		        <form string="Stock Transport Import">
+		        	<header>
+		        		<button name="import_transport" string="Import" states="draft" class="oe_highlight" type="object"/>
+		        		<button name="validate" string="Validate" states="imported" class="oe_highlight" type="object"/>
+		        		<button name="action_draft" string="Set to Draft" states="imported" type="object"/>
+		        		<field name="state" widget="statusbar"/>
+		        	</header>
+		        	<!-- <sheet> -->
+		             	<group col="4">
+			             	<field name="date" attrs="{'readonly': [('state','!=','draft')]}"/>
+			             	<field name="product_spk_id" attrs="{'readonly': [('state','!=','draft')], 'required': 1}" options="{'no_create': True}"/>
+			             	<!-- <field name="contract_id" attrs="{'readonly': [('state','!=','draft')], 'required': 1}" options="{'no_create': True}"/> -->
+			                <field name="file_name" invisible="1"/>
+                 			<field name="file" filename="file_name" attrs="{'readonly': [('state','!=','draft')]}"/>
+                 			<field name="keterangan" readonly="1"/>
+			            </group>
+			            <notebook>
+		                	<page string="Import Lines">
+		                		<field name="import_line" attrs="{'readonly': [('state','=','confirmed')]}">
+			                		<tree string="Import Lines" editable="bottom">
+			                			<field name="date" required="1"/>
+			                			<field name="no_tiket" />
+			                			<field name="no_plat" />
+			                			<field name="driver_name" />
+			                			<field name="relasi" />
+			                			<field name="no_kontrak" required="1"/>
+			                			<field name="no_do" required="1"/>
+						                <field name="src_location" required="1"/>
+						                <field name="src_bruto" />
+						                <field name="src_tare" />
+						                <field name="src_netto" />
+						                <field name="dest_location" required="1"/>
+						                <field name="dest_bruto" />
+						                <field name="dest_tare" />
+						                <field name="product_qty" required="1"/>
+						                <field name="product" required="1"/>
+						                <field name="transporter" required="1"/>
+						                <field name="keterangan" />
+						                <field name="rate_type" required="1"/>
+			                		</tree>
+			                	</field>
+		                	</page>
+		                	<page string="Transport Data" attrs="{'invisible': [('state','!=','confirmed')]}">
+		                		<field name="transport_move_ids" >
+		                			<tree>
+			                			<field name="date" readonly="1"/>
+						                <field name="partner_id" readonly="1"/>
+			                			<field name="no_plat" readonly="1"/>
+			                			<field name="driver_name" readonly="1"/>
+			                			<field name="src_location_id" readonly="1"/>
+			                			<field name="src_bruto"  readonly="1"/>
+			                			<field name="src_tare"  readonly="1"/>
+			                			<field name="src_netto"  readonly="1"/>
+			                			<field name="dest_location_id" readonly="1"/>
+			                			<field name="dest_bruto"  readonly="1"/>
+			                			<field name="dest_tare"  readonly="1"/>
+						                <field name="product_qty" readonly="1"/>
+						                <field name="difference_qty" readonly="1"/>
+						                <field name="rate_type" readonly="1"/>
+						                <field name="price_unit" readonly="1"/>
+						                <field name="wb_do" readonly="1"/>
+			                			<field name="contract_id"  readonly="1"/>
+						                <field name="product_id"/>
+			                			<field name="relasi"  readonly="1"/>
+	                				</tree>
+		                		</field>
+		                	</page>
+		                </notebook>
+		        	<!-- </sheet> -->
+		        </form>
+		    </field>
+		</record> 
+
+		<record model="ir.actions.act_window" id="action_stock_transport_import">
+		    <field name="name">Transport Import</field>
+		    <field name="res_model">stock.transport.import</field>
+		    <field name="view_type">form</field>
+		    <field name="view_mode">tree,form</field>
+		</record>
+	
+		<menuitem id="stock_transport_import_menu" name="Transport Import" parent="sjm_stock_transport.menu_stock_transport_cost" action="action_stock_transport_import" sequence="0"/>
+
+	</data>
+</odoo>

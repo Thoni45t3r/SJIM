@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id='wizard_report_rekap_purchase_requisition' model="ir.ui.view">
+            <field name="name">Rekap Purchase Requisition</field>
+            <field name="model">wizard.rekap.purchase.requisition</field>
+         	<field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Rekap Purchase Requisition">
+                    <group>
+                        <group>
+                            <field name="date_start" required='1'/>
+                            <field name="date_stop" required='1'/>
+                        </group>
+                        <group>
+                            <field name="report_type"  />
+                            <field name="company_id" widget="selection"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button icon="fa-print" name="create_report" string="Print" type="object" colspan="2" default_focus="1" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_report_rekap_purchase_requisition">
+            <field name="name">Rekap Purchase Requisition</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.rekap.purchase.requisition</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_report_rekap_purchase_requisition"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Rekap Purchase Requisition" parent="purchase.root_purchase_request_report" action="action_report_rekap_purchase_requisition" id="menu_report_rekap_purchase_requisition" icon="fa-print" sequence="30"/>
+    </data>
+</odoo>

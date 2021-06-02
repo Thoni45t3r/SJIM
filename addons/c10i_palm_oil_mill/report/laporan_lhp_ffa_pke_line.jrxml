@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laporan_lhp_ffa_line" language="groovy" pageWidth="370" pageHeight="595" orientation="Landscape" columnWidth="370" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ccf016f0-dca5-4e4b-b3ea-49ebf6abda42">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="mla_id" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT mlap.shift AS shift,
+    mlap.line AS line,
+	mlap.minyak_bungkil AS m_bungkil,
+	mlap.kadar_air AS k_air,
+	mlap.ffa AS ffa_pke,
+	mlap.iv AS iv_pke
+FROM mill_lhp_analisa_lab_pke mlap
+    WHERE mlap.lab_id =$P{mla_id}
+    ORDER BY mlap.shift ASC]]>
+	</queryString>
+	<field name="shift" class="java.lang.Integer"/>
+	<field name="line" class="java.lang.Integer"/>
+	<field name="m_bungkil" class="java.lang.Double"/>
+	<field name="k_air" class="java.lang.Double"/>
+	<field name="ffa_pke" class="java.lang.Double"/>
+	<field name="iv_pke" class="java.lang.Double"/>
+	<group name="shift">
+		<groupExpression><![CDATA[$F{shift}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="0" y="0" width="50" height="15" uuid="9616722a-a12d-4b1e-836c-85d5461401f0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{shift} == null ? " - " : $F{shift}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(-#,##0.00)">
+				<reportElement x="100" y="0" width="89" height="15" uuid="9d3a1117-eb6d-409d-9c40-4732bb62a33e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{m_bungkil} == null ? " - " : $F{m_bungkil}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(-#,##0.00)">
+				<reportElement x="189" y="0" width="66" height="15" uuid="51b26ae1-e2db-4464-abe3-02b72ae8a9b3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{k_air} == null ? " - " : $F{k_air}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(-#,##0.00)">
+				<reportElement x="255" y="0" width="55" height="15" uuid="4cb317c0-9bbd-49a7-a102-d3686e723569"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ffa_pke} == null ? " - " : $F{ffa_pke}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)">
+				<reportElement x="50" y="0" width="50" height="15" uuid="43d97dba-df50-4051-b426-183bd3889a3a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{line} == null ? " - " : $F{line}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(-#,##0.00)">
+				<reportElement x="310" y="0" width="55" height="15" uuid="cb2b91bd-b07c-44d5-ad4b-47823f56a644"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{iv_pke} == null ? " - " : $F{iv_pke}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

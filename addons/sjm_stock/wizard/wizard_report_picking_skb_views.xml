@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+	
+		<record id="general_ledger_by_locations" model="ir.ui.view">
+            <field name="name">Report General Ledger By Locations</field>
+            <field name="model">wizard.general.ledger.by.locations</field>
+            <field name="priority">24</field>
+            <field name="inherit_id" ref="c10i_account.wizard_general_ledger_by_locations"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='operating_unit_ids']" position="after">
+                    <field name="type_location_id" widget="many2many_tags" options="{'no_create_edit':True, 'no_create':True, 'no_open':True}" required='1' />
+                </xpath>
+            </field>
+        </record>
+		
+        <record id='wizard_report_picking_skb' model="ir.ui.view">
+            <field name="name">Rerport SKB</field>
+            <field name="model">wizard.report.picking.skb</field>
+         	<field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Report">
+                    <group>
+                        <group>
+                            <field name="date_start" required='1'/>
+                            <field name="date_stop" required='1'/>
+                            <field name="location_id" widget="many2many_tags" options="{'no_create_edit':True, 'no_create':True, 'no_open':True}" required='1' domain="[('usage', '=', 'internal'),('company_id','child_of',company_id)]"/>
+                        </group>
+                        <group>
+                            <field name="report_type"  />
+                            <field name="company_id" widget="selection"/>
+                            <field name="type_location_id" widget="many2many_tags" options="{'no_create_edit':True, 'no_create':True, 'no_open':True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button icon="fa-print" name="create_report" string="Print" type="object" colspan="2" default_focus="1" />
+						or
+						<button icon="fa-print" name="create_report_without_subtotal" string="Print Without Subtotal" type="object" colspan="2" default_focus="1" />
+						or
+						<button icon="fa-print" name="create_report_with_type_locations" string="Print With Type Locations" type="object" colspan="2" default_focus="1" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_report_picking_skb">
+            <field name="name">Rekap SKB</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.report.picking.skb</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_report_picking_skb"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Rekap SKB" parent="stock.menu_warehouse_report" action="action_report_picking_skb" id="menu_report_picking_skb" icon="fa-print" sequence="1"/>
+    </data>
+</odoo>

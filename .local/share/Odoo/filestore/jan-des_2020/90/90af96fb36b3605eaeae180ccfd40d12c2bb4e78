@@ -1,0 +1,106 @@
+
+/* Copyright 2016 LasLabs Inc.
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+.app-drawer-nav {
+  border-color: rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+  z-index: 10000;
+}
+.app-drawer-nav .o_tooltip {
+  z-index: 1051;
+}
+.app-drawer-nav .oe_logo {
+  margin-top: -11px;
+  position: relative;
+}
+.app-drawer-nav .oe_logo img {
+  height: 54px;
+}
+.app-drawer-nav .oe_logo .oe_logo_edit {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  padding: 4px;
+  display: none;
+  color: #eee;
+  background: rgba(37, 37, 37, 0.9);
+}
+.app-drawer-nav .oe_logo:hover .oe_logo_edit_admin {
+  display: block;
+}
+.app-drawer-nav .navbar-left {
+  width: 100%;
+}
+.app-drawer-nav .navbar-left li {
+  padding: 0;
+}
+.app-drawer-nav .app-drawer-title {
+  float: none;
+  font-weight: bold;
+}
+.app-drawer-nav .app-drawer-panel-title {
+  line-height: 16px;
+}
+.app-drawer-nav .app-drawer-panel-title > .drawer-toggle {
+  padding-top: 17px;
+  padding-bottom: 17px;
+  cursor: pointer;
+}
+.app-drawer-nav .app-drawer-icon-app {
+  height: 100%;
+  width: 100%;
+  max-width: 6em;
+  max-height: 6em;
+  object-fit: contain;
+  object-position: center;
+}
+.app-drawer-nav .panel-body {
+  padding-top: 54px;
+}
+.app-drawer-nav #appDrawerAppPanelHead {
+  position: absolute;
+  height: 54px;
+  width: 100%;
+}
+.app-drawer-nav .app-drawer-search-panel .panel-body {
+  padding-top: 8px;
+}
+.drawer-nav {
+  width: 80%;
+}
+.drawer--left .drawer-nav {
+  left: -80%;
+}
+.drawer--left.drawer-open .drawer-hamburger {
+  left: 80%;
+}
+.drawer--right .drawer-nav {
+  right: -80%;
+}
+.drawer-open .oe-right-toolbar {
+  display: none;
+}
+.drawer-closed .oe-right-toolbar {
+  display: block;
+}
+/* App Drawer Toggle */
+.app-drawer-toggle {
+  background-color: transparent;
+}
+.app-drawer-toggle.navbar-toggle {
+  margin-left: 1em;
+}
+/* Icon Focusing */
+.web-responsive-focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}

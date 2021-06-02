@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+        <report string="FORM SURAT PENGIRIMAN BARANG"
+            model="stock.picking"
+            auto="True"
+            name="report_form_spb"
+            rml="sjm_stock/reports/report_stock_internal_transfer.jrxml"
+            id="report_form_spb"
+            menu="True"
+            />
+
+    	<!-- REPORT SKB -->
+		<report string="REKAP SURAT KELUAR BARANG"
+            model="wizard.report.picking.skb"
+            auto="True"
+            name="report_picking_skb"
+            rml="sjm_stock/reports/report_skb_with_cost_center.jrxml"
+            id="report_picking_skb"
+            menu="False"
+            />
+        <report string="REKAP SURAT KELUAR BARANG XLSX"
+            model="wizard.report.picking.skb"
+            auto="True"
+            name="report_picking_skb_xlsx"
+            rml="sjm_stock/reports/report_skb_with_cost_center_xlsx.jrxml"
+            id="report_picking_skb_xlsx"
+            menu="False"
+            />
+	</data>
+</odoo>
